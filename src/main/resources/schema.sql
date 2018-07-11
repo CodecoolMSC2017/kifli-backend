@@ -11,45 +11,45 @@ DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    account_name VARCHAR(20),
-    email VARCHAR(30),
-    password VARCHAR(50),
-    first_name VARCHAR(20),
-    last_name VARCHAR(20),
-    type VARCHAR(10)
+    account_name VARCHAR(20) NOT NULL,
+    email VARCHAR(30) NOT NULL,
+    password VARCHAR(50) NOT NULL,
+    first_name VARCHAR(20) NOT NULL,
+    last_name VARCHAR(20) NOT NULL,
+    type VARCHAR(10) NOT NULL
 );
 
 CREATE TABLE premium_users (
     user_id INTEGER,
-    expiration_date DATE,
+    expiration_date DATE NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 CREATE TABLE credentials (
     user_id INTEGER,
-    phone VARCHAR(20),
-    country VARCHAR(30),
-    state VARCHAR(30),
-    city VARCHAR(30),
-    street VARCHAR(30),
+    phone VARCHAR(20) NOT NULL,
+    country VARCHAR(30) NOT NULL,
+    state VARCHAR(30) NOT NULL,
+    city VARCHAR(30) NOT NULL,
+    street VARCHAR(30) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 CREATE TABLE categories (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(20)
+    name VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE product_ads (
     product_id SERIAL PRIMARY KEY,
     user_id INTEGER,
     category_id INTEGER,
-    title VARCHAR(50),
+    title VARCHAR(50) NOT NULL,
     description TEXT,
-    price REAL,
-    type VARCHAR(10),
-    state VARCHAR(10),
-    upload_date DATE,
+    price REAL NOT NULL,
+    type VARCHAR(10) NOT NULL,
+    state VARCHAR(10) NOT NULL,
+    upload_date DATE NOT NULL,
     FOREIGN KEY (category_id) REFERENCES categories(id),
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
@@ -57,8 +57,8 @@ CREATE TABLE product_ads (
 CREATE TABLE category_attributes (
     id SERIAL PRIMARY KEY,
     category_id INTEGER,
-    name VARCHAR(20),
-    type VARCHAR(10),
+    name VARCHAR(20) NOT NULL,
+    type VARCHAR(10) NOT NULL,
     FOREIGN KEY (category_id) REFERENCES categories(id)
 );
 
@@ -75,21 +75,21 @@ CREATE TABLE product_attributes (
 
 CREATE TABLE premium_ads (
     product_id INTEGER,
-    expiration_date DATE,
+    expiration_date DATE NOT NULL,
     FOREIGN KEY(product_id) REFERENCES product_ads(product_id)
 );
 
 CREATE TABLE product_pictures (
     product_id INTEGER,
-    image_url VARCHAR(100),
+    image_url VARCHAR(100) NOT NULL,
     FOREIGN KEY(product_id) REFERENCES product_ads(product_id)
 );
 
 CREATE TABLE bids (
     user_id INTEGER,
     product_id INTEGER,
-    amount INTEGER,
-    timestamp TIMESTAMP,
+    amount INTEGER NOT NULL,
+    timestamp TIMESTAMP NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY(product_id) REFERENCES product_ads(product_id)
 );
