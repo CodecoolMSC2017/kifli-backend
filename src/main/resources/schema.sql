@@ -11,8 +11,8 @@ DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    account_name VARCHAR(20) NOT NULL,
-    email VARCHAR(30) NOT NULL,
+    account_name VARCHAR(20) NOT NULL UNIQUE,
+    email VARCHAR(30) NOT NULL UNIQUE,
     password VARCHAR(50) NOT NULL,
     first_name VARCHAR(20) NOT NULL,
     last_name VARCHAR(20) NOT NULL,
@@ -27,7 +27,7 @@ CREATE TABLE premium_users (
 
 CREATE TABLE credentials (
     user_id INTEGER,
-    phone VARCHAR(20) NOT NULL,
+    phone VARCHAR(20) NOT NULL UNIQUE,
     country VARCHAR(30) NOT NULL,
     state VARCHAR(30) NOT NULL,
     city VARCHAR(30) NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE credentials (
 
 CREATE TABLE categories (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(20) NOT NULL
+    name VARCHAR(20) NOT NULL UNIQUE
 );
 
 CREATE TABLE product_ads (
@@ -81,7 +81,7 @@ CREATE TABLE premium_ads (
 
 CREATE TABLE product_pictures (
     product_id INTEGER,
-    image_url VARCHAR(100) NOT NULL,
+    image_url VARCHAR(100) NOT NULL UNIQUE,
     FOREIGN KEY(product_id) REFERENCES product_ads(product_id)
 );
 
