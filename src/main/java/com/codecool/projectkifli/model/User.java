@@ -1,5 +1,7 @@
 package com.codecool.projectkifli.model;
 
+import com.codecool.projectkifli.dto.UserDto;
+
 import javax.persistence.*;
 
 @Entity
@@ -82,6 +84,10 @@ public class User {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public UserDto toDto() {
+        return new UserDto(this);
     }
 
     @Override
