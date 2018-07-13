@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@CrossOrigin
 @RestController
 public class UserAuthController {
 
     @Autowired
     private UserRepository userRepository;
 
-    @CrossOrigin
     @PostMapping(
             value = "/register",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -28,7 +28,6 @@ public class UserAuthController {
         return save.toDto();
     }
 
-    @CrossOrigin
     @PostMapping(
             value = "/login",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -48,7 +47,6 @@ public class UserAuthController {
         return null;
     }
 
-    @CrossOrigin
     @PostMapping(
             value = "/logout",
             consumes = MediaType.APPLICATION_JSON_VALUE
