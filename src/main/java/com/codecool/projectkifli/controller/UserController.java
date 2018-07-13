@@ -1,4 +1,4 @@
-package com.codecool.projectkifli;
+package com.codecool.projectkifli.controller;
 
 import com.codecool.projectkifli.model.User;
 import com.codecool.projectkifli.repository.UserRepository;

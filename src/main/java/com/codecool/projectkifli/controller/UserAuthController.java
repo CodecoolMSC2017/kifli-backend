@@ -1,4 +1,4 @@
-package com.codecool.projectkifli;
+package com.codecool.projectkifli.controller;
 
 import com.codecool.projectkifli.dto.UserDto;
 import com.codecool.projectkifli.model.User;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class UserAuth {
+public class UserAuthController {
 
     @Autowired
     private UserRepository userRepository;

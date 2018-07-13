@@ -9,12 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @SpringBootApplication
 public class ProjectKifliApplication {
 
-	@RequestMapping("/")
-	String home() {
-		return "This will be the magnificent page of the Kifli Project!";
-	}
-
-	public static void main(String[] args) {
-		SpringApplication.run(ProjectKifliApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ProjectKifliApplication.class, args);
+    }
 }
