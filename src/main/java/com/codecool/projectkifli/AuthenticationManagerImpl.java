@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,12 +33,13 @@ public class AuthenticationManagerImpl implements AuthenticationManager {
         if (!password.equals(user.getPassword())) {
             throw new BadCredentialsException("Invalid password");
         }
+        if (user.getRoles() == null) {
+            user.setRoles(new ArrayList<>());
+        }
 
-        List<String> authorities = new ArrayList<>();
-        authorities.add(user.getType().toUpperCase());
         return new UsernamePasswordAuthenticationToken(
                 accountName,
                 password,
-                authorities.stream().map(x -> new SimpleGrantedAuthority(x)).collect(Collectors.toList()));
+                user.getRoles().stream().map(x -> new SimpleGrantedAuthority(x)).collect(Collectors.toList()));
     }
 }

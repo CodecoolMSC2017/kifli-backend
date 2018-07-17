@@ -2,6 +2,8 @@ package com.codecool.projectkifli.dto;
 
 import com.codecool.projectkifli.model.User;
 
+import java.util.List;
+
 public class UserDto {
 
     private Integer id;
@@ -9,7 +11,7 @@ public class UserDto {
     private String email;
     private String firstName;
     private String lastName;
-    private String type;
+    private List<String> roles;
 
     public UserDto(User user) {
         this.id = user.getId();
@@ -17,7 +19,7 @@ public class UserDto {
         this.email = user.getEmail();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
-        this.type = user.getType();
+        this.roles = user.getRoles();
     }
 
     public Integer getId() {
@@ -40,7 +42,7 @@ public class UserDto {
         return lastName;
     }
 
-    public String getType() {
-        return type;
+    public List<String> getRoles() {
+        return roles;
     }
 }

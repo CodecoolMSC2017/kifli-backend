@@ -3,6 +3,7 @@ package com.codecool.projectkifli.model;
 import com.codecool.projectkifli.dto.UserDto;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -16,18 +17,25 @@ public class User {
     private String password;
     private String firstName;
     private String lastName;
-    private String type;
+
+    @ElementCollection
+    @CollectionTable(
+            name = "roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
+    )
+    @Column(name = "role")
+    private List<String> roles;
 
     public User() {}
 
-    public User(Integer id, String accountName, String email, String password, String firstName, String lastName, String type) {
+    public User(Integer id, String accountName, String email, String password, String firstName, String lastName, List<String> roles) {
         this.id = id;
         this.accountName = accountName;
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.type = type;
+        this.roles = roles;
     }
 
     public Integer getId() {
@@ -54,8 +62,8 @@ public class User {
         return lastName;
     }
 
-    public String getType() {
-        return type;
+    public List<String> getRoles() {
+        return roles;
     }
 
     public void setId(Integer id) {
@@ -82,8 +90,8 @@ public class User {
         this.lastName = lastName;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 
     public UserDto toDto() {
@@ -99,7 +107,7 @@ public class User {
                 ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", type='" + type + '\'' +
+                ", roles=" + roles +
                 '}';
     }
 }

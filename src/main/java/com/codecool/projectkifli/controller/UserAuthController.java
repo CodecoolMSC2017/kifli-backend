@@ -4,17 +4,18 @@ import com.codecool.projectkifli.dto.UserDto;
 import com.codecool.projectkifli.model.User;
 import com.codecool.projectkifli.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -22,9 +23,6 @@ public class UserAuthController {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private UserDetailsService userDetailsService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -35,7 +33,9 @@ public class UserAuthController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public UserDto register(@RequestBody User user) {
-        user.setType("regular");
+        List<String> roles = new ArrayList<>();
+        roles.add("ROLE_REGULAR");
+        user.setRoles(roles);
         User save = userRepository.save(user);
         return login(save);
     }
@@ -59,10 +59,4 @@ public class UserAuthController {
         return userRepository.findByAccountName(accountName).toDto();
     }
 
-    @GetMapping(
-            value = "/logout"
-    )
-    public void logout(HttpSession session) {
-        session.invalidate();
-    }
 }

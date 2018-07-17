@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS product_ads;
 DROP TABLE IF EXISTS categories;
 DROP TABLE IF EXISTS credentials;
 DROP TABLE IF EXISTS premium_users;
+DROP TABLE IF EXISTS roles;
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
@@ -17,6 +18,13 @@ CREATE TABLE users (
     first_name VARCHAR(20) NOT NULL,
     last_name VARCHAR(20) NOT NULL,
     type VARCHAR(10) DEFAULT 'regular'
+);
+
+CREATE TABLE roles (
+    user_id INTEGER NOT NULL,
+    role VARCHAR(50) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    UNIQUE (user_id, role)
 );
 
 CREATE TABLE premium_users (
