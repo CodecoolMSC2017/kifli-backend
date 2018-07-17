@@ -4,11 +4,17 @@ import com.codecool.projectkifli.dto.UserDto;
 import com.codecool.projectkifli.model.User;
 import com.codecool.projectkifli.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
 
 @CrossOrigin
 @RestController
@@ -16,6 +22,12 @@ public class UserAuthController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @PostMapping(
             value = "/register",
@@ -25,7 +37,7 @@ public class UserAuthController {
     public UserDto register(@RequestBody User user) {
         user.setType("regular");
         User save = userRepository.save(user);
-        return save.toDto();
+        return login(save);
     }
 
     @PostMapping(
@@ -37,21 +49,20 @@ public class UserAuthController {
         String accountName = user.getAccountName();
         String password = user.getPassword();
 
-        User dbUser = userRepository.findByAccountName(accountName);
-        if (dbUser != null) {
-            if (password.equals(dbUser.getPassword())) {
-                // TODO: login user
-                return dbUser.toDto();
-            }
-        }
-        return null;
+        UsernamePasswordAuthenticationToken authReq =
+                new UsernamePasswordAuthenticationToken(accountName, password);
+        Authentication auth = authenticationManager.authenticate(authReq);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        System.out.println(SecurityContextHolder.getContext().getAuthentication());
+
+        return userRepository.findByAccountName(accountName).toDto();
     }
 
-    @PostMapping(
-            value = "/logout",
-            consumes = MediaType.APPLICATION_JSON_VALUE
+    @GetMapping(
+            value = "/logout"
     )
-    public void logout(@RequestBody User user) {
-        // TODO: logout user
+    public void logout(HttpSession session) {
+        session.invalidate();
     }
 }
