@@ -49,7 +49,7 @@ CREATE TABLE categories (
 );
 
 CREATE TABLE product_ads (
-    product_id SERIAL PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     user_id INTEGER,
     category_id INTEGER,
     title VARCHAR(50) NOT NULL,
@@ -78,19 +78,19 @@ CREATE TABLE product_attributes (
     bool_value BOOLEAN,
     real_value REAL,
     FOREIGN KEY (attribute_id) REFERENCES category_attributes(id),
-    FOREIGN KEY(product_id) REFERENCES product_ads(product_id)
+    FOREIGN KEY(product_id) REFERENCES product_ads(id)
 );
 
 CREATE TABLE premium_ads (
-    product_id INTEGER,
+    product_id INTEGER UNIQUE,
     expiration_date DATE NOT NULL,
-    FOREIGN KEY(product_id) REFERENCES product_ads(product_id)
+    FOREIGN KEY(product_id) REFERENCES product_ads(id)
 );
 
 CREATE TABLE product_pictures (
     product_id INTEGER,
     image_url VARCHAR(100) NOT NULL UNIQUE,
-    FOREIGN KEY(product_id) REFERENCES product_ads(product_id)
+    FOREIGN KEY(product_id) REFERENCES product_ads(id)
 );
 
 CREATE TABLE bids (
@@ -99,5 +99,5 @@ CREATE TABLE bids (
     amount INTEGER NOT NULL,
     timestamp TIMESTAMP NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY(product_id) REFERENCES product_ads(product_id)
+    FOREIGN KEY(product_id) REFERENCES product_ads(id)
 );
