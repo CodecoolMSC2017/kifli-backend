@@ -1,7 +1,5 @@
 package com.codecool.projectkifli.model;
 
-import org.hibernate.annotations.Cascade;
-
 import javax.persistence.*;
 
 @Entity
@@ -10,7 +8,7 @@ public class ProductAd {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer productId;
+    private Integer id;
     private Integer userId;
     private Integer categoryId;
     private String title;
@@ -19,20 +17,17 @@ public class ProductAd {
     private String type;
     private String state;
     private String uploadDate;
-
-    @ManyToOne
-    @JoinTable(name = "premium_ads")
-    private ProductPremium productPremium;
+    private String premiumExpirationDate;
 
     public ProductAd() {
     }
 
-    public Integer getProductId() {
-        return productId;
+    public Integer getId() {
+        return id;
     }
 
-    public void setProductId(Integer productId) {
-        this.productId = productId;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Integer getUserId() {
@@ -79,10 +74,6 @@ public class ProductAd {
         return type;
     }
 
-    public ProductPremium getProductPremium() {
-        return productPremium;
-    }
-
     public void setType(String type) {
         this.type = type;
     }
@@ -103,7 +94,11 @@ public class ProductAd {
         this.uploadDate = uploadDate;
     }
 
-    public void setProductPremium(ProductPremium productPremium) {
-        this.productPremium = productPremium;
+    public String getPremiumExpirationDate() {
+        return premiumExpirationDate;
+    }
+
+    public void setPremiumExpirationDate(String premiumExpirationDate) {
+        this.premiumExpirationDate = premiumExpirationDate;
     }
 }

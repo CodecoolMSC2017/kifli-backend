@@ -11,6 +11,7 @@ public class UserDto {
     private String email;
     private String firstName;
     private String lastName;
+    private String premiumExpirationDate;
     private List<String> roles;
 
     public UserDto(User user) {
@@ -20,6 +21,7 @@ public class UserDto {
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.roles = user.getRoles();
+        this.premiumExpirationDate = user.getPremiumExpirationDate();
     }
 
     public Integer getId() {
@@ -44,5 +46,9 @@ public class UserDto {
 
     public List<String> getRoles() {
         return roles;
+    }
+
+    public String getPremiumExpirationDate() {
+        return premiumExpirationDate;
     }
 }

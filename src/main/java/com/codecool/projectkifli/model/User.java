@@ -17,6 +17,7 @@ public class User {
     private String password;
     private String firstName;
     private String lastName;
+    private String premiumExpirationDate;
 
     @ElementCollection
     @CollectionTable(
@@ -27,16 +28,6 @@ public class User {
     private List<String> roles;
 
     public User() {}
-
-    public User(Integer id, String accountName, String email, String password, String firstName, String lastName, List<String> roles) {
-        this.id = id;
-        this.accountName = accountName;
-        this.email = email;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.roles = roles;
-    }
 
     public Integer getId() {
         return id;
@@ -66,6 +57,10 @@ public class User {
         return roles;
     }
 
+    public String getPremiumExpirationDate() {
+        return premiumExpirationDate;
+    }
+
     public void setId(Integer id) {
         this.id = id;
     }
@@ -92,6 +87,10 @@ public class User {
 
     public void setRoles(List<String> roles) {
         this.roles = roles;
+    }
+
+    public void setPremiumExpirationDate(String premiumExpirationDate) {
+        this.premiumExpirationDate = premiumExpirationDate;
     }
 
     public UserDto toDto() {

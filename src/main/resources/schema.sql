@@ -16,7 +16,8 @@ CREATE TABLE users (
     email VARCHAR(30) NOT NULL UNIQUE,
     password VARCHAR(50) NOT NULL,
     first_name VARCHAR(20) NOT NULL,
-    last_name VARCHAR(20) NOT NULL
+    last_name VARCHAR(20) NOT NULL,
+    premium_expiration_date DATE
 );
 
 CREATE TABLE roles (
@@ -24,12 +25,6 @@ CREATE TABLE roles (
     role VARCHAR(50) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id),
     UNIQUE (user_id, role)
-);
-
-CREATE TABLE premium_users (
-    user_id INTEGER,
-    expiration_date DATE NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 CREATE TABLE credentials (
@@ -57,6 +52,7 @@ CREATE TABLE product_ads (
     type VARCHAR(10) NOT NULL,
     state VARCHAR(10) NOT NULL,
     upload_date DATE NOT NULL,
+    premium_expiration_date DATE,
     FOREIGN KEY (category_id) REFERENCES categories(id),
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
@@ -77,12 +73,6 @@ CREATE TABLE product_attributes (
     bool_value BOOLEAN,
     real_value REAL,
     FOREIGN KEY (attribute_id) REFERENCES category_attributes(id),
-    FOREIGN KEY(product_id) REFERENCES product_ads(id)
-);
-
-CREATE TABLE premium_ads (
-    product_id INTEGER UNIQUE,
-    expiration_date DATE NOT NULL,
     FOREIGN KEY(product_id) REFERENCES product_ads(id)
 );
 
