@@ -1,18 +1,21 @@
-INSERT INTO users (account_name, email, password, first_name, last_name, type) VALUES ('admin', 'admin@admin.admin', 'admin', 'admin', 'admin', 'ADMIN'); --1
-INSERT INTO users (account_name, email, password, first_name, last_name, type) VALUES ('Laci', 'klaszlo@admin.admin', 'admin', 'László', 'Kontra', 'ADMIN'); --2
-INSERT INTO users (account_name, email, password, first_name, last_name, type) VALUES ('Feri', 'hferenc@admin.admin', 'admin', 'Ferenc', 'Hajnal', 'ADMIN'); --3
-INSERT INTO users (account_name, email, password, first_name, last_name, type) VALUES ('Kristóf', 'pkristof@admin.admin', 'admin', 'Kristóf', 'Prokaj', 'ADMIN'); --4
-INSERT INTO users (account_name, email, password, first_name, last_name, type) VALUES ('Isti', 'gyistvan@admin.admin', 'admin', 'István', 'Győrfi', 'ADMIN'); --5
-INSERT INTO users (account_name, email, password, first_name, last_name, type) VALUES ('Anna', 'kanna@user.user', 'user', 'Anna', 'Kiss', 'USER'); --6
-INSERT INTO users (account_name, email, password, first_name, last_name, type) VALUES ('Béla', 'nbela@user.user', 'user', 'Béla', 'Nagy', 'USER'); --7
+INSERT INTO users (account_name, email, password, first_name, last_name) VALUES ('admin', 'admin@admin.admin', 'admin', 'admin', 'admin'); --1
+INSERT INTO users (account_name, email, password, first_name, last_name) VALUES ('Laci', 'klaszlo@admin.admin', 'admin', 'László', 'Kontra'); --2
+INSERT INTO users (account_name, email, password, first_name, last_name) VALUES ('Feri', 'hferenc@admin.admin', 'admin', 'Ferenc', 'Hajnal'); --3
+INSERT INTO users (account_name, email, password, first_name, last_name) VALUES ('Kristóf', 'pkristof@admin.admin', 'admin', 'Kristóf', 'Prokaj'); --4
+INSERT INTO users (account_name, email, password, first_name, last_name) VALUES ('Isti', 'gyistvan@admin.admin', 'admin', 'István', 'Győrfi'); --5
+INSERT INTO users (account_name, email, password, first_name, last_name) VALUES ('Anna', 'kanna@user.user', 'user', 'Anna', 'Kiss'); --6
+INSERT INTO users (account_name, email, password, first_name, last_name) VALUES ('Béla', 'nbela@user.user', 'user', 'Béla', 'Nagy'); --7
 
-INSERT INTO roles (user_id, role) VALUES ('1', 'ROLE_REGULAR');
-INSERT INTO roles (user_id, role) VALUES ('2', 'ROLE_ADMIN');
-INSERT INTO roles (user_id, role) VALUES ('3', 'ROLE_ADMIN');
-INSERT INTO roles (user_id, role) VALUES ('4', 'ROLE_ADMIN');
-INSERT INTO roles (user_id, role) VALUES ('5', 'ROLE_ADMIN');
-INSERT INTO roles (user_id, role) VALUES ('6', 'ROLE_USER');
-INSERT INTO roles (user_id, role) VALUES ('7', 'ROLE_USER');
+INSERT INTO roles (user_id, role) VALUES (1, 'ROLE_ADMIN');
+INSERT INTO roles (user_id, role) VALUES (2, 'ROLE_ADMIN');
+INSERT INTO roles (user_id, role) VALUES (3, 'ROLE_ADMIN');
+INSERT INTO roles (user_id, role) VALUES (4, 'ROLE_ADMIN');
+INSERT INTO roles (user_id, role) VALUES (5, 'ROLE_ADMIN');
+INSERT INTO roles (user_id, role) VALUES (6, 'ROLE_REGULAR');
+INSERT INTO roles (user_id, role) VALUES (7, 'ROLE_REGULAR');
+
+INSERT INTO credentials (user_id, phone, country, state, city, street) VALUES (6, '20 358 1974', 'Hungary', 'Bács-Kiskun', 'Kiskunhalas', 'Fogas utca 2');
+INSERT INTO credentials (user_id, phone, country, state, city, street) VALUES (7, '70 585 3547', 'Hungary', 'Heves', 'Pétervására', 'Kanalas út 4');
 
 INSERT INTO categories (name) VALUES ('MACHINE'); --1
 INSERT INTO categories (name) VALUES ('FARM'); --2

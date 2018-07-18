@@ -16,8 +16,7 @@ CREATE TABLE users (
     email VARCHAR(30) NOT NULL UNIQUE,
     password VARCHAR(50) NOT NULL,
     first_name VARCHAR(20) NOT NULL,
-    last_name VARCHAR(20) NOT NULL,
-    type VARCHAR(10) DEFAULT 'regular'
+    last_name VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE roles (
