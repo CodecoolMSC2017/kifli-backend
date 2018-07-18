@@ -54,8 +54,6 @@ public class UserAuthController {
         Authentication auth = authenticationManager.authenticate(authReq);
         SecurityContextHolder.getContext().setAuthentication(auth);
 
-        System.out.println(SecurityContextHolder.getContext().getAuthentication());
-
         return userRepository.findByAccountName(accountName).toDto();
     }
 
