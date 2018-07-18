@@ -2,6 +2,7 @@ package com.codecool.projectkifli.model;
 
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "product_ads")
@@ -17,9 +18,9 @@ public class ProductAds {
     private Float price;
     private String type;
     private String state;
-    private String uploadDate;
+    private Date uploadDate;
 
-    public ProductAds(Integer id, Integer userId, Integer categoryId, String title, String description, Float price, String type, String state, String uploadDate) {
+    public ProductAds(Integer id, Integer userId, Integer categoryId, String title, String description, Float price, String type, String state, Date uploadDate) {
 
         this.id = id;
         this.userId = userId;
@@ -65,7 +66,7 @@ public class ProductAds {
         return state;
     }
 
-    public String getUploadDate() {
+    public Date getUploadDate() {
         return uploadDate;
     }
 
@@ -101,7 +102,7 @@ public class ProductAds {
         this.state = state;
     }
 
-    public void setUploadDate(String uploadDate) {
+    public void setUploadDate(Date uploadDate) {
         this.uploadDate = uploadDate;
     }
 }
