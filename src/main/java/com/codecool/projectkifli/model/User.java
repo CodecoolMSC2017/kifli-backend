@@ -27,6 +27,10 @@ public class User {
     @Column(name = "role")
     private List<String> roles;
 
+    @OneToOne
+    @JoinTable (name = "credentials")
+    private Credentials credentials;
+
     public User() {}
 
     public Integer getId() {

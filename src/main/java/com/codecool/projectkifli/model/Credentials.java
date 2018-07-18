@@ -1,19 +1,27 @@
 package com.codecool.projectkifli.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 public class Credentials {
 
-    private Integer user_id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer userId;
     private String phone;
     private String country;
     private String state;
     private String city;
     private String street;
 
-    public Credentials(Integer user_id, String phone, String country, String state, String city, String street) {
-        this.user_id = user_id;
+    public Credentials() {
+    }
+
+    public Credentials(Integer userId, String phone, String country, String state, String city, String street) {
+        this.userId = userId;
         this.phone = phone;
         this.country = country;
         this.state = state;
@@ -22,11 +30,11 @@ public class Credentials {
     }
 
     public Integer getUser_id() {
-        return user_id;
+        return userId;
     }
 
-    public void setUser_id(Integer user_id) {
-        this.user_id = user_id;
+    public void setUser_id(Integer userId) {
+        this.userId = userId;
     }
 
     public String getPhone() {
