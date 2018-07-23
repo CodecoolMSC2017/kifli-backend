@@ -2,33 +2,31 @@ DROP TABLE IF EXISTS product_attributes;
 DROP TABLE IF EXISTS category_attributes;
 DROP TABLE IF EXISTS bids;
 DROP TABLE IF EXISTS product_pictures;
-DROP TABLE IF EXISTS premium_ads;
 DROP TABLE IF EXISTS product_ads;
 DROP TABLE IF EXISTS categories;
 DROP TABLE IF EXISTS credentials;
-DROP TABLE IF EXISTS premium_users;
-DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS authorities;
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    account_name VARCHAR(20) NOT NULL UNIQUE,
+    username VARCHAR(20) NOT NULL UNIQUE,
     email VARCHAR(30) NOT NULL UNIQUE,
-    password VARCHAR(50) NOT NULL,
+    password VARCHAR(100) NOT NULL,
+    enabled BOOLEAN NOT NULL,
     first_name VARCHAR(20) NOT NULL,
-    last_name VARCHAR(20) NOT NULL,
-    premium_expiration_date DATE
+    last_name VARCHAR(20) NOT NULL
 );
 
-CREATE TABLE roles (
-    user_id INTEGER NOT NULL,
-    role VARCHAR(50) NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users (id),
-    UNIQUE (user_id, role)
+CREATE TABLE authorities (
+    username varchar(50) NOT NULL,
+    authority varchar(50) NOT NULL,
+    FOREIGN KEY (username) REFERENCES users (username),
+    UNIQUE (username, authority)
 );
 
 CREATE TABLE credentials (
-    user_id INTEGER,
+    user_id INTEGER PRIMARY KEY,
     phone VARCHAR(20) NOT NULL UNIQUE,
     country VARCHAR(30) NOT NULL,
     state VARCHAR(30) NOT NULL,

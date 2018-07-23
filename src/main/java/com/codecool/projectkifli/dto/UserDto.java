@@ -2,38 +2,38 @@ package com.codecool.projectkifli.dto;
 
 import com.codecool.projectkifli.model.User;
 
-import java.util.List;
-
 public class UserDto {
 
     private Integer id;
-    private String accountName;
+    private String username;
     private String email;
+    private Boolean enabled;
     private String firstName;
     private String lastName;
-    private String premiumExpirationDate;
-    private List<String> roles;
 
     public UserDto(User user) {
         this.id = user.getId();
-        this.accountName = user.getAccountName();
+        this.username = user.getUsername();
         this.email = user.getEmail();
+        this.enabled = user.getEnabled();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
-        this.roles = user.getRoles();
-        this.premiumExpirationDate = user.getPremiumExpirationDate();
     }
 
     public Integer getId() {
         return id;
     }
 
-    public String getAccountName() {
-        return accountName;
+    public String getUsername() {
+        return username;
     }
 
     public String getEmail() {
         return email;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
     }
 
     public String getFirstName() {
@@ -42,13 +42,5 @@ public class UserDto {
 
     public String getLastName() {
         return lastName;
-    }
-
-    public List<String> getRoles() {
-        return roles;
-    }
-
-    public String getPremiumExpirationDate() {
-        return premiumExpirationDate;
     }
 }
