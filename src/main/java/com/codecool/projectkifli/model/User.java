@@ -27,7 +27,7 @@ public class User implements Serializable {
     )
     @Column(name = "authority")
     private List<String> authorities;
-    
+
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id", nullable = false)
     private Credentials credentials;

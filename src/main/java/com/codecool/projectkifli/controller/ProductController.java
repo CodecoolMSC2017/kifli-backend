@@ -19,8 +19,6 @@ public class ProductController {
             produces = MediaType.APPLICATION_JSON_VALUE)
 
     public List<Product> getAllProducts() {
-        Product product = productRepository.findById(1).orElse(null);
-        System.out.println(product.getUploadDate());
         return productRepository.findAll();
-        }
+    }
 }
