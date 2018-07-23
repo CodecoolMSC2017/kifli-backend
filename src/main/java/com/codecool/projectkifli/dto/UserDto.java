@@ -24,7 +24,7 @@ public class UserDto {
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.authorities = user.getAuthorities();
-        //this.credentials = user.getCredentials();
+        this.credentials = user.getCredentials();
     }
 
     public Integer getId() {
