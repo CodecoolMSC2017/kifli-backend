@@ -1,10 +1,13 @@
 package com.codecool.projectkifli.controller;
 
+import com.codecool.projectkifli.dto.UserDto;
 import com.codecool.projectkifli.model.User;
 import com.codecool.projectkifli.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -16,8 +19,10 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("")
-    public Iterable<User> getAll() {
-        return userService.getAll();
+    public Iterable<UserDto> getAll() {
+        List<UserDto> userDtos = new ArrayList<>();
+        userService.getAll().forEach(user -> userDtos.add(user.toDto()));
+        return userDtos;
     }
 
     @GetMapping("/{id}")
