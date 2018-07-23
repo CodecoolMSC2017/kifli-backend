@@ -75,8 +75,8 @@ CREATE TABLE product_attributes (
 );
 
 CREATE TABLE product_pictures (
-    product_id INTEGER,
-    image_url VARCHAR(100) NOT NULL UNIQUE,
+    id SERIAL NOT NULL,
+    product_id INTEGER NOT NULL,
     FOREIGN KEY(product_id) REFERENCES product_ads(id)
 );
 

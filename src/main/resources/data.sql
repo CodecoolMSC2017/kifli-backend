@@ -25,3 +25,5 @@ INSERT INTO product_ads (user_id, category_id, title, description, price, type, 
 INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (2, 3, '100 chicken FOR SALE', 'Domestic farmed chickens for sale. The price per piece.', 12.00, 'BUYOUT', 'FOR SALE', to_date('20180720','YYYYMMDD'));
 INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (5, 3, 'BEEF FOR SALE', 'Fresh beef for sale! For professional butcher. The price per kg.', 10.00, 'BUYOUT', 'FOR SALE', to_date('20180718','YYYYMMDD'));
 INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (6, 2, 'FARM FOR SALE', '3000m2, This farm also has the potential to be converted into an organic farm operation.  With deep fertile soils, local access to manure and compost, good irrigation and good rainfall this farm is highly suited for organics.', 300000.00, 'BUYOUT', 'FOR SALE', to_date('20160425','YYYYMMDD'));
+
+INSERT INTO product_pictures (product_id) VALUES (3);
