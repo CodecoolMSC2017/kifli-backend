@@ -20,18 +20,22 @@ public class ImageController {
             value = "/{id}",
             produces = MediaType.IMAGE_PNG_VALUE
     )
-    public byte[] getImageById(@PathVariable("id") String id) throws IOException {
+    public byte[] getImageById(@PathVariable("id") String id) {
         String url = System.getProperty("user.home") + "/kifli-images";
         if (new File(url).mkdir()) {
             return null;
         }
-        String path = url + "/" + id + ".png";
-        BufferedImage image = ImageIO.read(new File(path));
+        try {
+            String path = url + "/" + id + ".png";
+            BufferedImage image = ImageIO.read(new File(path));
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(image, "png", baos);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(image, "png", baos);
 
-        return baos.toByteArray();
+            return baos.toByteArray();
+        } catch (IOException e) {
+            return null;
+        }
     }
 
 }
