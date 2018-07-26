@@ -163,7 +163,7 @@ INSERT INTO product_pictures (product_id) VALUES (25); -- 64
 INSERT INTO product_pictures (product_id) VALUES (25); -- 65
 INSERT INTO product_pictures (product_id) VALUES (25); -- 66
 INSERT INTO product_pictures (product_id) VALUES (25); -- 67
-INSERT INTO product_pictures (product_id) VALUES (25); -- 68
+INSERT INTO product_pictures (product_id) VALUES (26); -- 68
 INSERT INTO product_pictures (product_id) VALUES (26); -- 69
 INSERT INTO product_pictures (product_id) VALUES (26); -- 70
 INSERT INTO product_pictures (product_id) VALUES (26); -- 71
