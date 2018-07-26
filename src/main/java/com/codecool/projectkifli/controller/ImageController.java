@@ -18,7 +18,7 @@ public class ImageController {
 
     @GetMapping(
             value = "/{id}",
-            produces = MediaType.IMAGE_PNG_VALUE
+            produces = MediaType.IMAGE_JPEG_VALUE
     )
     public byte[] getImageById(@PathVariable("id") String id) {
         String url = System.getProperty("user.home") + "/kifli-images";
@@ -26,16 +26,31 @@ public class ImageController {
             return null;
         }
         try {
-            String path = url + "/" + id + ".png";
-            BufferedImage image = ImageIO.read(new File(path));
+            String path = url + "/" + id;
+            File file = getExistingFile(path);
+            BufferedImage image = ImageIO.read(file);
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(image, "png", baos);
+            ImageIO.write(image, "jpeg", baos);
 
             return baos.toByteArray();
         } catch (IOException e) {
             return null;
         }
+    }
+
+    private File getExistingFile(String path) {
+        File file = new File(path + ".jpg");
+        if (!file.exists()) {
+            file = new File(path + ".jpeg");
+        }
+        if (!file.exists()) {
+            file = new File(path + ".JPG");
+        }
+        if (!file.exists()) {
+            file = new File(path + ".JPEG");
+        }
+        return file;
     }
 
 }
