@@ -1,10 +1,11 @@
 package com.codecool.projectkifli.dto;
 
+import com.codecool.projectkifli.model.Credentials;
 import com.codecool.projectkifli.model.User;
 
 import java.util.List;
 
-public class UserDto {
+public class UserCredentialsDto {
 
     private Integer id;
     private String username;
@@ -13,8 +14,9 @@ public class UserDto {
     private String firstName;
     private String lastName;
     private List<String> authorities;
+    private Credentials credentials;
 
-    public UserDto(User user) {
+    public UserCredentialsDto(User user) {
         this.id = user.getId();
         this.username = user.getUsername();
         this.email = user.getEmail();
@@ -22,6 +24,7 @@ public class UserDto {
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.authorities = user.getAuthorities();
+        this.credentials = user.getCredentials();
     }
 
     public Integer getId() {
@@ -50,5 +53,9 @@ public class UserDto {
 
     public List<String> getAuthorities() {
         return authorities;
+    }
+
+    public Credentials getCredentials() {
+        return credentials;
     }
 }

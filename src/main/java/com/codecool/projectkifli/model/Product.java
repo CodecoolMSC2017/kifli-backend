@@ -2,7 +2,7 @@ package com.codecool.projectkifli.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
-
+import java.util.List;
 
 @Entity
 @Table(name = "product_ads")
@@ -20,13 +20,27 @@ public class Product implements Serializable {
     private String uploadDate;
     private String premiumExpirationDate;
 
+    @ElementCollection
+    @CollectionTable(
+            name = "product_pictures",
+            joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id")
+    )
+    @Column(name = "id")
+    private List<Integer> pictureIds;
 
     public Product() {
-
     }
 
-    public Product(Integer id, Integer userId, String title, String description, Float price, String type, String state, String uploadDate, String premiumExpirationDate) {
-
+    public Product(
+            Integer id,
+            Integer userId,
+            String title,
+            String description,
+            Float price,
+            String type,
+            String state,
+            String uploadDate,
+            String premiumExpirationDate) {
         this.id = id;
         this.userId = userId;
         this.title = title;
@@ -108,5 +122,13 @@ public class Product implements Serializable {
 
     public void setPremiumExpirationDate(String premiumExpirationDate) {
         this.premiumExpirationDate = premiumExpirationDate;
+    }
+
+    public List<Integer> getPictureIds() {
+        return pictureIds;
+    }
+
+    public void setPictureIds(List<Integer> pictureIds) {
+        this.pictureIds = pictureIds;
     }
 }

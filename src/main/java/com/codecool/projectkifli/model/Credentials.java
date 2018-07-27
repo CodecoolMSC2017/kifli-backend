@@ -8,7 +8,7 @@ public class Credentials {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer user_id;
+    private Integer userId;
     private String phone;
     private String country;
     private String state;
@@ -18,12 +18,12 @@ public class Credentials {
     public Credentials() {
     }
 
-    public Integer getUser_id() {
-        return user_id;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser_id(Integer user_id) {
-        this.user_id = user_id;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getPhone() {

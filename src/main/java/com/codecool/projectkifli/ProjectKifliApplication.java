@@ -29,7 +29,10 @@ public class ProjectKifliApplication extends WebSecurityConfigurerAdapter {
         http.csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers("/products", "/register").permitAll()
+                .antMatchers("/register").anonymous()
+                .antMatchers("/products/**", "/images/**").permitAll()
+                .antMatchers("/users").hasRole("ADMIN")
+                .antMatchers("/users/**").authenticated()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();

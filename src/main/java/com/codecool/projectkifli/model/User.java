@@ -27,13 +27,11 @@ public class User implements Serializable {
     )
     @Column(name = "authority")
     private List<String> authorities;
-/*
-    @OneToOne
-    @JoinTable(
-            joinColumns = @JoinColumn(name = "id", referencedColumnName = "user_id")
-    )
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
     private Credentials credentials;
-*/
+
     public User() {
     }
 
@@ -100,7 +98,7 @@ public class User implements Serializable {
     public void setAuthorities(List<String> authorities) {
         this.authorities = authorities;
     }
-/*
+
     public Credentials getCredentials() {
         return credentials;
     }
@@ -108,7 +106,7 @@ public class User implements Serializable {
     public void setCredentials(Credentials credentials) {
         this.credentials = credentials;
     }
-*/
+
     public UserDto toDto() {
         return new UserDto(this);
     }
