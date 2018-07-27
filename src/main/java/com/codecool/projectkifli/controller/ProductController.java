@@ -22,5 +22,5 @@ public class ProductController {
         Product product = productRepository.findById(1).orElse(null);
         System.out.println(product.getUploadDate());
         return productRepository.findAll();
-        }
+    }
 }
