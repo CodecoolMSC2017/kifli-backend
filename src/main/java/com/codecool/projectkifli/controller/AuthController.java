@@ -31,7 +31,7 @@ public class AuthController {
             return null;
         }
         logger.debug("User: " + user.getUsername() + " has logged in successfully");
-        return user.toDto();
+        return new UserDto(user);
     }
 
     @DeleteMapping("")

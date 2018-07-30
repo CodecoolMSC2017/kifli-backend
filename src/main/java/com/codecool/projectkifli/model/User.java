@@ -106,8 +106,4 @@ public class User implements Serializable {
     public void setCredentials(Credentials credentials) {
         this.credentials = credentials;
     }
-
-    public UserDto toDto() {
-        return new UserDto(this);
-    }
 }

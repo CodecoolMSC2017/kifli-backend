@@ -1,5 +1,6 @@
 package com.codecool.projectkifli.controller;
 
+import com.codecool.projectkifli.dto.UserCredentialsDto;
 import com.codecool.projectkifli.dto.UserDto;
 import com.codecool.projectkifli.model.User;
 import com.codecool.projectkifli.service.UserService;
@@ -20,18 +21,17 @@ public class UserController {
     @GetMapping("")
     public Iterable<UserDto> getAll() {
         List<UserDto> userDtos = new ArrayList<>();
-        userService.getAll().forEach(user -> userDtos.add(user.toDto()));
+        userService.getAll().forEach(user -> userDtos.add(new UserDto(user)));
         return userDtos;
     }
 
     @GetMapping("/{id}")
-    public UserDto get(@PathVariable("id") Integer id) {
+    public UserCredentialsDto get(@PathVariable("id") Integer id) {
         User user = userService.get(id).orElse(null);
         if (user == null) {
             return null;
         }
-
-        return user.toDto();
+        return new UserCredentialsDto(user);
     }
 
     @PostMapping("")
