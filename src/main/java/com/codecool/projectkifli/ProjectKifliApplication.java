@@ -13,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.web.bind.annotation.RestController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 
@@ -20,8 +22,10 @@ import javax.sql.DataSource;
 @SpringBootApplication
 public class ProjectKifliApplication extends WebSecurityConfigurerAdapter {
 
+    private static final Logger logger = LoggerFactory.getLogger(ProjectKifliApplication.class);
     public static void main(String[] args) {
         SpringApplication.run(ProjectKifliApplication.class, args);
+        logger.debug("--Application started!--");
     }
 
     @Override
