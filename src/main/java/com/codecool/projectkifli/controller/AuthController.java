@@ -25,7 +25,7 @@ public class AuthController {
         if (user == null) {
             return null;
         }
-        return user.toDto();
+        return new UserDto(user);
     }
 
     @DeleteMapping("")
