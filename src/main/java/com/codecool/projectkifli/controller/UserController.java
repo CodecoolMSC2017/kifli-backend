@@ -30,6 +30,7 @@ public class UserController {
         if (user == null) {
             return null;
         }
+
         return user.toDto();
     }
 
