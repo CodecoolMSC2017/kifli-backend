@@ -54,4 +54,12 @@ public class ProductController {
         }
         throw new AccessDeniedException("TAKA");
     }
+
+    @GetMapping(
+            value = "search/{searchString}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public List<Product> findBySearchTitle(@PathVariable("searchString") String searchString) {
+        return productRepository.findBySearchTitleString(searchString.toLowerCase());
+    }
 }
