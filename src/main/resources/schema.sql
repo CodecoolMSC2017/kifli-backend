@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS categories CASCADE;
 DROP TABLE IF EXISTS credentials CASCADE;
 DROP TABLE IF EXISTS authorities CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
+DROP TYPE IF EXISTS data_type;
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
@@ -55,23 +56,24 @@ CREATE TABLE product_ads (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
+CREATE TYPE data_type AS ENUM ('STRING', 'INT', 'BOOL', 'REAL');
+
 CREATE TABLE category_attributes (
     id SERIAL PRIMARY KEY,
     category_id INTEGER,
     name VARCHAR(20) NOT NULL,
-    type VARCHAR(10) NOT NULL,
-    FOREIGN KEY (category_id) REFERENCES categories(id)
+    type data_type NOT NULL,
+    FOREIGN KEY (category_id) REFERENCES categories(id),
+    UNIQUE (category_id, name)
 );
 
 CREATE TABLE product_attributes (
     product_id INTEGER,
     attribute_id INTEGER,
-    string_value VARCHAR(30),
-    int_value INTEGER,
-    bool_value BOOLEAN,
-    real_value REAL,
+    value VARCHAR(30) NOT NULL,
     FOREIGN KEY (attribute_id) REFERENCES category_attributes(id),
-    FOREIGN KEY(product_id) REFERENCES product_ads(id)
+    FOREIGN KEY(product_id) REFERENCES product_ads(id),
+    UNIQUE (product_id, attribute_id)
 );
 
 CREATE TABLE product_pictures (

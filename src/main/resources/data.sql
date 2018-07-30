@@ -23,6 +23,12 @@ INSERT INTO categories (name) VALUES ('ANIMAL'); -- 3
 INSERT INTO categories (name) VALUES ('TOOL'); -- 4
 INSERT INTO categories (name) VALUES ('PLANT'); -- 5
 
+INSERT INTO category_attributes (category_id, name, type) VALUES (1, 'color', 'STRING'); -- 1
+INSERT INTO category_attributes (category_id, name, type) VALUES (1, 'performance', 'INT'); -- 2
+INSERT INTO category_attributes (category_id, name, type) VALUES (1, 'functional', 'BOOL'); -- 3
+INSERT INTO category_attributes (category_id, name, type) VALUES (2, 'size', 'INT'); -- 4
+INSERT INTO category_attributes (category_id, name, type) VALUES (2, 'color', 'STRING'); -- 5
+INSERT INTO category_attributes (category_id, name, type) VALUES (2, 'location', 'STRING'); -- 6
 
 -- 1
 INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (3, 1, 'New tractor for sale', 'Front hydraulics, front PTO, susepension front axle, good tires.', 24691.00, 'BUYOUT', 'FOR SALE', to_date('20170725','YYYYMMDD'));
@@ -95,6 +101,13 @@ INSERT INTO product_ads (user_id, category_id, title, description, price, type, 
 -- 35
 INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (3, 1, 'Horse-draw carrige', 'description', 132.90, 'BUYOUT', 'FOR SALE', to_date('20180725','YYYYMMDD'));
 
+
+INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (1, 1, 'green');
+INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (1, 2, '2');
+INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (1, 3, 'true');
+INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (4, 4, '3');
+INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (4, 5, 'brown');
+INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (4, 6, 'right here bro');
 
 INSERT INTO product_pictures (product_id) VALUES (1); -- 1
 INSERT INTO product_pictures (product_id) VALUES (1); -- 2
