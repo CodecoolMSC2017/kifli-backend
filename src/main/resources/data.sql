@@ -16,6 +16,7 @@ INSERT INTO authorities (username, authority) VALUES ('Béla', 'ROLE_REGULAR');
 
 INSERT INTO credentials (user_id, phone, country, state, city, street) VALUES (6, '20 358 1974', 'Hungary', 'Bács-Kiskun', 'Kiskunhalas', 'Fogas utca 2');
 INSERT INTO credentials (user_id, phone, country, state, city, street) VALUES (7, '70 585 3547', 'Hungary', 'Heves', 'Pétervására', 'Kanalas út 4');
+INSERT INTO credentials (user_id, phone, country, state, city, street) VALUES (1, '20 007 0007', 'Hungary', 'Borsod', 'Szalonna', 'Fa utca 2');
 
 INSERT INTO categories (name) VALUES ('MACHINE'); -- 1
 INSERT INTO categories (name) VALUES ('FARM'); -- 2
