@@ -71,6 +71,11 @@ public class ProductController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public List<Product> findBySearchTitle(@PathVariable("searchString") String searchString) {
-        return productRepository.findBySearchTitleString(searchString.toLowerCase());
+        List<Product> bySearchTitleString = productRepository.findBySearchTitleString(searchString.toLowerCase());
+
+        for (Product product : bySearchTitleString) {
+            System.out.println(product);
+        }
+        return bySearchTitleString;
     }
 }
