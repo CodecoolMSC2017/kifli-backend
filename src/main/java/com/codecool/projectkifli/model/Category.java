@@ -12,7 +12,7 @@ public class Category {
     private Integer id;
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "categoryId")
     private List<CategoryAttribute> attributes;
 
