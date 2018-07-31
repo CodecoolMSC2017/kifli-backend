@@ -33,7 +33,7 @@ public class UserService {
     }
 
     @Transactional
-    public User add(String username, String email, String password, String confirmationPassword) {
+    public User add(String username, String email, String password, String confirmationPassword, String firstName, String lastName) {
         if (!password.equals(confirmationPassword)) {
             throw new IllegalArgumentException();
         }
@@ -44,6 +44,8 @@ public class UserService {
                 AuthorityUtils.createAuthorityList("USER_ROLE")));
         User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(""));
         user.setEmail(email);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
         return user;
     }
 

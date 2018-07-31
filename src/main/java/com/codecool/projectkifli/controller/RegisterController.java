@@ -18,6 +18,8 @@ public class RegisterController {
         String email = map.get("email");
         String password = map.get("password");
         String confirmationPassword = map.get("confirmationPassword");
-        userService.add(username, email, password, confirmationPassword);
+        String firstName = map.get("firstName");
+        String lastName = map.get("lastName");
+        userService.add(username, email, password, confirmationPassword, firstName, lastName);
     }
 }
