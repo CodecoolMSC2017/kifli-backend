@@ -3,6 +3,7 @@ package com.codecool.projectkifli.model;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 @Table(name = "product_ads")
@@ -27,6 +28,18 @@ public class Product implements Serializable {
     )
     @Column(name = "id")
     private List<Integer> pictureIds;
+
+    @OneToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @OneToMany
+    @JoinColumn(name = "productId")
+    private List<ProductAttribute> attributes;
+
+    @OneToOne
+    @JoinColumn(name = "id", referencedColumnName = "userId")
+    private User owner;
 
     public Product() {
     }
@@ -130,5 +143,29 @@ public class Product implements Serializable {
 
     public void setPictureIds(List<Integer> pictureIds) {
         this.pictureIds = pictureIds;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public List<ProductAttribute> getAttributes() {
+        return attributes;
+    }
+
+    public void setAttributes(List<ProductAttribute> attributes) {
+        this.attributes = attributes;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 }
