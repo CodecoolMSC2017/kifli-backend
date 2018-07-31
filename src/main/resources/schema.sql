@@ -56,7 +56,7 @@ CREATE TABLE product_ads (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-CREATE TYPE data_type AS ENUM ('STRING', 'INT', 'BOOL', 'REAL');
+CREATE TYPE data_type AS ENUM ('STRING', 'NUMBER', 'BOOL');
 
 CREATE TABLE category_attributes (
     id SERIAL PRIMARY KEY,
@@ -68,6 +68,7 @@ CREATE TABLE category_attributes (
 );
 
 CREATE TABLE product_attributes (
+    id SERIAL PRIMARY KEY,
     product_id INTEGER,
     attribute_id INTEGER,
     value VARCHAR(30) NOT NULL,

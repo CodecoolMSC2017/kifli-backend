@@ -18,16 +18,16 @@ INSERT INTO credentials (user_id, phone, country, state, city, street) VALUES (6
 INSERT INTO credentials (user_id, phone, country, state, city, street) VALUES (7, '70 585 3547', 'Hungary', 'Heves', 'Pétervására', 'Kanalas út 4');
 INSERT INTO credentials (user_id, phone, country, state, city, street) VALUES (1, '20 007 0007', 'Hungary', 'Borsod', 'Szalonna', 'Fa utca 2');
 
-INSERT INTO categories (name) VALUES ('MACHINE'); -- 1
-INSERT INTO categories (name) VALUES ('FARM'); -- 2
-INSERT INTO categories (name) VALUES ('ANIMAL'); -- 3
-INSERT INTO categories (name) VALUES ('TOOL'); -- 4
-INSERT INTO categories (name) VALUES ('PLANT'); -- 5
+INSERT INTO categories (name) VALUES ('Machine'); -- 1
+INSERT INTO categories (name) VALUES ('Farm'); -- 2
+INSERT INTO categories (name) VALUES ('Animal'); -- 3
+INSERT INTO categories (name) VALUES ('Tool'); -- 4
+INSERT INTO categories (name) VALUES ('Plant'); -- 5
 
 INSERT INTO category_attributes (category_id, name, type) VALUES (1, 'color', 'STRING'); -- 1
-INSERT INTO category_attributes (category_id, name, type) VALUES (1, 'performance', 'INT'); -- 2
+INSERT INTO category_attributes (category_id, name, type) VALUES (1, 'performance', 'NUMBER'); -- 2
 INSERT INTO category_attributes (category_id, name, type) VALUES (1, 'functional', 'BOOL'); -- 3
-INSERT INTO category_attributes (category_id, name, type) VALUES (2, 'size', 'INT'); -- 4
+INSERT INTO category_attributes (category_id, name, type) VALUES (2, 'size', 'NUMBER'); -- 4
 INSERT INTO category_attributes (category_id, name, type) VALUES (2, 'color', 'STRING'); -- 5
 INSERT INTO category_attributes (category_id, name, type) VALUES (2, 'location', 'STRING'); -- 6
 
