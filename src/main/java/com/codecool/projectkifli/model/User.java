@@ -1,5 +1,6 @@
 package com.codecool.projectkifli.model;
 
+import com.codecool.projectkifli.dto.UserCredentialsDto;
 import com.codecool.projectkifli.dto.UserDto;
 
 import javax.persistence.*;
@@ -105,5 +106,9 @@ public class User implements Serializable {
 
     public void setCredentials(Credentials credentials) {
         this.credentials = credentials;
+    }
+
+    public UserCredentialsDto toCredentialsDto() {
+        return new UserCredentialsDto(this);
     }
 }

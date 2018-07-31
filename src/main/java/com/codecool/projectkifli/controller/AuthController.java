@@ -1,6 +1,6 @@
 package com.codecool.projectkifli.controller;
 
-import com.codecool.projectkifli.dto.UserDto;
+import com.codecool.projectkifli.dto.UserCredentialsDto;
 import com.codecool.projectkifli.model.User;
 import com.codecool.projectkifli.service.UserService;
 import org.slf4j.Logger;
@@ -24,14 +24,14 @@ public class AuthController {
     private UserService userService;
 
     @GetMapping("")
-    public UserDto get(Principal principal) {
+    public UserCredentialsDto get(Principal principal) {
         User user = userService.get(principal.getName()).orElse(null);
         if (user == null) {
             logger.debug("something happened");
             return null;
         }
         logger.debug("User: " + user.getUsername() + " has logged in successfully");
-        return new UserDto(user);
+        return new UserCredentialsDto(user);
     }
 
     @DeleteMapping("")
