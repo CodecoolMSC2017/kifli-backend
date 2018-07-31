@@ -24,12 +24,23 @@ INSERT INTO categories (name) VALUES ('Animal'); -- 3
 INSERT INTO categories (name) VALUES ('Tool'); -- 4
 INSERT INTO categories (name) VALUES ('Plant'); -- 5
 
-INSERT INTO category_attributes (category_id, name, type) VALUES (1, 'color', 'STRING'); -- 1
-INSERT INTO category_attributes (category_id, name, type) VALUES (1, 'performance', 'NUMBER'); -- 2
-INSERT INTO category_attributes (category_id, name, type) VALUES (1, 'functional', 'BOOL'); -- 3
-INSERT INTO category_attributes (category_id, name, type) VALUES (2, 'size', 'NUMBER'); -- 4
-INSERT INTO category_attributes (category_id, name, type) VALUES (2, 'color', 'STRING'); -- 5
-INSERT INTO category_attributes (category_id, name, type) VALUES (2, 'location', 'STRING'); -- 6
+INSERT INTO category_attributes (category_id, name, type) VALUES (1, 'Color', 'STRING'); -- 1
+INSERT INTO category_attributes (category_id, name, type) VALUES (1, 'Performance', 'NUMBER'); -- 2
+INSERT INTO category_attributes (category_id, name, type) VALUES (1, 'Functional', 'BOOL'); -- 3
+INSERT INTO category_attributes (category_id, name, type) VALUES (2, 'Size', 'NUMBER'); -- 4
+INSERT INTO category_attributes (category_id, name, type) VALUES (2, 'Color', 'STRING'); -- 5
+INSERT INTO category_attributes (category_id, name, type) VALUES (2, 'Location', 'STRING'); -- 6
+INSERT INTO category_attributes (category_id, name, type) VALUES (3, 'Species', 'STRING'); --7
+INSERT INTO category_attributes (category_id, name, type) VALUES (3, 'Age', 'NUMBER'); --8
+INSERT INTO category_attributes (category_id, name, type) VALUES (3, 'Gender', 'STRING'); --9
+INSERT INTO category_attributes (category_id, name, type) VALUES (3, 'Weight', 'NUMBER'); --10
+INSERT INTO category_attributes (category_id, name, type) VALUES (4, 'Material', 'STRING'); --11
+INSERT INTO category_attributes (category_id, name, type) VALUES (4, 'Used', 'BOOL'); --12
+INSERT INTO category_attributes (category_id, name, type) VALUES (5, 'Type', 'STRING'); --13
+INSERT INTO category_attributes (category_id, name, type) VALUES (5, 'Ideal Region', 'STRING'); --14
+INSERT INTO category_attributes (category_id, name, type) VALUES (5, 'Advantages', 'STRING'); --15
+INSERT INTO category_attributes (category_id, name, type) VALUES (5, 'Soil type', 'STRING'); --16
+
 
 -- 1
 INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (3, 1, 'New tractor for sale', 'Front hydraulics, front PTO, susepension front axle, good tires.', 24691.00, 'BUYOUT', 'FOR SALE', to_date('20170725','YYYYMMDD'));
