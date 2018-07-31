@@ -131,4 +131,20 @@ public class Product implements Serializable {
     public void setPictureIds(List<Integer> pictureIds) {
         this.pictureIds = pictureIds;
     }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", type='" + type + '\'' +
+                ", state='" + state + '\'' +
+                ", uploadDate='" + uploadDate + '\'' +
+                ", premiumExpirationDate='" + premiumExpirationDate + '\'' +
+                ", pictureIds=" + pictureIds +
+                '}';
+    }
 }
