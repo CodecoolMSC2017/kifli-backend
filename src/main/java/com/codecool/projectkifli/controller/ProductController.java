@@ -34,14 +34,6 @@ public class ProductController {
     }
 
     @GetMapping(
-            value = "/user/{id}",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public List<ProductListItem> getProductsOfUser(@PathVariable("id") Integer userId) {
-        return productService.findAllByUserId(userId);
-    }
-
-    @GetMapping(
             value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
@@ -72,11 +64,11 @@ public class ProductController {
     }
 
     @GetMapping(
-            value = "user-products/{id}",
+            value = "user/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public List<Product> getUserProducts(@PathVariable("id") int id) {
-        return productService.getUserProducts(id);
+    public List<ProductListItem> getUserProducts(@PathVariable("id") Integer userId) {
+        return productService.getUserProducts(userId);
     }
 
 }
