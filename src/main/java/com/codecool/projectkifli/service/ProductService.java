@@ -58,6 +58,11 @@ public class ProductService {
         return bySearchTitleString;
     }
 
+    public List<Product> getUserProducts(int id) {
+        List<Product> userProducts = productRepository.getProductByUserId(id);
+        return userProducts;
+    }
+
     public void add(ProductPostData data, Principal principal) throws ParseException {
         User user = userRepository.findByUsername(principal.getName()).orElse(null);
         SimpleProduct product = new SimpleProduct();
