@@ -35,20 +35,19 @@ public class ProductService {
         return productListItemRepository.findAll();
     }
 
-    public Product findById(Integer id) throws ChangeSetPersister.NotFoundException {
-        return productRepository.findById(id).orElseThrow(ChangeSetPersister.NotFoundException::new);
+    public Product findById(Integer id) {
+        return productRepository.findById(id).orElse(null);
     }
 
-    public void delete(Integer id, Principal principal) throws ChangeSetPersister.NotFoundException {
+    public void delete(Integer id, Principal principal) {
         User user = userRepository.findByUsername(principal.getName()).orElse(null);
-        Product product = productRepository.findById(id).orElseThrow(ChangeSetPersister.NotFoundException::new);
-        if (product.getUserId().equals(user.getId()) || user.getAuthorities().contains("ROLE_ADMIN")) {
+        Product product = productRepository.findById(id).orElse(null);
+        if (product.getOwner().getId().equals(user.getId()) || user.getAuthorities().contains("ROLE_ADMIN")) {
             productRepository.deleteById(id);
             return;
         }
         throw new AccessDeniedException("TAKA");
     }
-
 
     public List<Product> search(String searchString) {
         List<Product> bySearchTitleString = productRepository.findBySearchTitleString(searchString.toLowerCase());
@@ -90,5 +89,9 @@ public class ProductService {
             productAttribute.setValue(value);
             productAttributeRepository.save(productAttribute);
         }
+    }
+
+    public List<ProductListItem> findAllByUserId(Integer userId) {
+        return productListItemRepository.findAllByUserId(userId);
     }
 }

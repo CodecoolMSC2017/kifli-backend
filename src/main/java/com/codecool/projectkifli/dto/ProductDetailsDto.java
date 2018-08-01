@@ -13,6 +13,7 @@ import java.util.Map;
 public class ProductDetailsDto {
 
     private Integer id;
+    private Integer ownerId;
     private String title;
     private String description;
     private Float price;
@@ -41,6 +42,7 @@ public class ProductDetailsDto {
         this.attributes = setupAttributes(product);
 
         User owner = product.getOwner();
+        this.ownerId = owner.getId();
         this.ownerEmail = owner.getEmail();
         // this.ownerPhone = owner.getCredentials().getPhone();
     }
@@ -68,6 +70,10 @@ public class ProductDetailsDto {
 
     public Integer getId() {
         return id;
+    }
+
+    public Integer getOwnerId() {
+        return ownerId;
     }
 
     public String getTitle() {
