@@ -49,15 +49,11 @@ public class ProductService {
     }
 
     public List<Product> search(String searchString) {
-        List<Product> bySearchTitleString = productRepository.findBySearchTitleString(searchString.toLowerCase());
-        for (Product product : bySearchTitleString) {
-            System.out.println(product);
-        }
-        return bySearchTitleString;
+        return productRepository.findBySearchTitleString(searchString.toLowerCase());
     }
 
-    public List<Product> getUserProducts(Integer userId) {
-        return productRepository.findByOwnerId(userId);
+    public List<ProductListItem> getUserProducts(Integer userId) {
+        return productListItemRepository.findAllByUserId(userId);
     }
 
     public void add(ProductPostData data, Principal principal) throws ParseException {
@@ -87,9 +83,5 @@ public class ProductService {
             productAttribute.setValue(value);
             productAttributeRepository.save(productAttribute);
         }
-    }
-
-    public List<ProductListItem> findAllByUserId(Integer userId) {
-        return productListItemRepository.findAllByUserId(userId);
     }
 }
