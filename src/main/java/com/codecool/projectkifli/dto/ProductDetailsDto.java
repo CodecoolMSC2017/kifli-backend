@@ -5,6 +5,7 @@ import com.codecool.projectkifli.model.Product;
 import com.codecool.projectkifli.model.ProductAttribute;
 import com.codecool.projectkifli.model.User;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +18,8 @@ public class ProductDetailsDto {
     private Float price;
     private String type;
     private String state;
-    private String uploadDate;
-    private String premiumExpirationDate;
+    private Date uploadDate;
+    private Date premiumExpirationDate;
     private List<Integer> pictureIds;
     private String categoryName;
     private Map<String, String> attributes;
@@ -89,11 +90,11 @@ public class ProductDetailsDto {
         return state;
     }
 
-    public String getUploadDate() {
+    public Date getUploadDate() {
         return uploadDate;
     }
 
-    public String getPremiumExpirationDate() {
+    public Date getPremiumExpirationDate() {
         return premiumExpirationDate;
     }
 

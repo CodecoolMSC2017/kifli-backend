@@ -1,19 +1,17 @@
 package com.codecool.projectkifli.model;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 @Entity
 @Table(name = "product_ads")
-public class Product implements Serializable {
+public class SimpleProduct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private Integer userId;
+    private Integer categoryId;
     private String title;
     private String description;
     private Float price;
@@ -22,27 +20,7 @@ public class Product implements Serializable {
     private Date uploadDate;
     private Date premiumExpirationDate;
 
-    @ElementCollection
-    @CollectionTable(
-            name = "product_pictures",
-            joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id")
-    )
-    @Column(name = "id")
-    private List<Integer> pictureIds;
-
-    @OneToOne
-    @JoinColumn(name = "categoryId")
-    private Category category;
-
-    @OneToMany
-    @JoinColumn(name = "productId")
-    private List<ProductAttribute> attributes;
-
-    @OneToOne
-    @JoinColumn(name = "id", referencedColumnName = "userId")
-    private User owner;
-
-    public Product() {
+    public SimpleProduct() {
     }
 
     public Integer getId() {
@@ -51,6 +29,10 @@ public class Product implements Serializable {
 
     public Integer getUserId() {
         return userId;
+    }
+
+    public Integer getCategoryId() {
+        return categoryId;
     }
 
     public String getTitle() {
@@ -89,6 +71,10 @@ public class Product implements Serializable {
         this.userId = userId;
     }
 
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }
@@ -117,35 +103,4 @@ public class Product implements Serializable {
         this.premiumExpirationDate = premiumExpirationDate;
     }
 
-    public List<Integer> getPictureIds() {
-        return pictureIds;
-    }
-
-    public void setPictureIds(List<Integer> pictureIds) {
-        this.pictureIds = pictureIds;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public List<ProductAttribute> getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(List<ProductAttribute> attributes) {
-        this.attributes = attributes;
-    }
-
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
-    }
 }

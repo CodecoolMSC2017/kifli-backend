@@ -16,6 +16,12 @@ public class ProductAttribute {
     public ProductAttribute() {
     }
 
+    public ProductAttribute(Integer productId, Integer attributeId, String value) {
+        this.productId = productId;
+        this.attributeId = attributeId;
+        this.value = value;
+    }
+
     public Integer getId() {
         return id;
     }

@@ -8,6 +8,7 @@ public class ProductPostData {
     private String description;
     private Float price;
     private Map<String, String> attributes;
+    private Integer categoryId;
 
     public ProductPostData() {
     }
@@ -44,6 +45,14 @@ public class ProductPostData {
         this.attributes = attributes;
     }
 
+    public Integer getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
+    }
+
     @Override
     public String toString() {
         return "ProductPostData{" +
@@ -51,6 +60,7 @@ public class ProductPostData {
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", attributes=" + attributes +
+                ", categoryId=" + categoryId +
                 '}';
     }
 }
