@@ -3,7 +3,6 @@ package com.codecool.projectkifli.service;
 import com.codecool.projectkifli.model.*;
 import com.codecool.projectkifli.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -57,9 +56,8 @@ public class ProductService {
         return bySearchTitleString;
     }
 
-    public List<Product> getUserProducts(int id) {
-        List<Product> userProducts = productRepository.getProductByUserId(id);
-        return userProducts;
+    public List<Product> getUserProducts(Integer userId) {
+        return productRepository.findByOwnerId(userId);
     }
 
     public void add(ProductPostData data, Principal principal) throws ParseException {
