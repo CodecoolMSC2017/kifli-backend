@@ -4,7 +4,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Entity
 @Table(name = "product_ads")
@@ -13,7 +12,6 @@ public class Product implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer userId;
     private String title;
     private String description;
     private Float price;
@@ -38,8 +36,8 @@ public class Product implements Serializable {
     @JoinColumn(name = "productId")
     private List<ProductAttribute> attributes;
 
-    @OneToOne
-    @JoinColumn(name = "id", referencedColumnName = "userId")
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "userId", referencedColumnName = "id")
     private User owner;
 
     public Product() {
@@ -47,10 +45,6 @@ public class Product implements Serializable {
 
     public Integer getId() {
         return id;
-    }
-
-    public Integer getUserId() {
-        return userId;
     }
 
     public String getTitle() {
@@ -83,10 +77,6 @@ public class Product implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
     }
 
     public void setTitle(String title) {
@@ -146,6 +136,25 @@ public class Product implements Serializable {
     }
 
     public void setOwner(User owner) {
+        System.out.println("setting owner: " + owner);
         this.owner = owner;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", type='" + type + '\'' +
+                ", state='" + state + '\'' +
+                ", uploadDate=" + uploadDate +
+                ", premiumExpirationDate=" + premiumExpirationDate +
+                ", pictureIds=" + pictureIds +
+                ", category=" + category +
+                ", attributes=" + attributes +
+                ", owner=" + owner +
+                '}';
     }
 }
