@@ -14,15 +14,20 @@ INSERT INTO authorities (username, authority) VALUES ('Isti', 'ROLE_ADMIN');
 INSERT INTO authorities (username, authority) VALUES ('Anna', 'ROLE_REGULAR');
 INSERT INTO authorities (username, authority) VALUES ('Béla', 'ROLE_REGULAR');
 
+INSERT INTO credentials (user_id, phone, country, state, city, street) VALUES (1, '70 007 0007', 'Hungary', 'Borsod Abaúj Zemplén', 'Szalonta', 'Fa utca 2');
+INSERT INTO credentials (user_id, phone, country, state, city, street) VALUES (2, '70 007 0008', 'Hungary', 'Borsod Abaúj Zemplén', 'Miskolc', 'Hajós Alfréd utca 4');
+INSERT INTO credentials (user_id, phone, country, state, city, street) VALUES (3, '70 007 0001', 'Hungary', 'Heves', 'Eger', 'Dobó István utca 4');
+INSERT INTO credentials (user_id, phone, country, state, city, street) VALUES (4, '70 007 0010', 'Hungary', 'A', 'B', 'C utca x+y^2');
+INSERT INTO credentials (user_id, phone, country, state, city, street) VALUES (5, '70 007 0011', 'Hungary', 'Heves', 'Degec', 'Teszopol utca 69.');
 INSERT INTO credentials (user_id, phone, country, state, city, street) VALUES (6, '20 358 1974', 'Hungary', 'Bács-Kiskun', 'Kiskunhalas', 'Fogas utca 2');
 INSERT INTO credentials (user_id, phone, country, state, city, street) VALUES (7, '70 585 3547', 'Hungary', 'Heves', 'Pétervására', 'Kanalas út 4');
-INSERT INTO credentials (user_id, phone, country, state, city, street) VALUES (1, '20 007 0007', 'Hungary', 'Borsod', 'Szalonna', 'Fa utca 2');
 
 INSERT INTO categories (name) VALUES ('Machine'); -- 1
 INSERT INTO categories (name) VALUES ('Farm'); -- 2
 INSERT INTO categories (name) VALUES ('Animal'); -- 3
 INSERT INTO categories (name) VALUES ('Tool'); -- 4
 INSERT INTO categories (name) VALUES ('Plant'); -- 5
+INSERT INTO categories (name) VALUES ('Produce'); --6
 
 INSERT INTO category_attributes (category_id, name, type) VALUES (1, 'Color', 'STRING'); -- 1
 INSERT INTO category_attributes (category_id, name, type) VALUES (1, 'Performance', 'NUMBER'); -- 2
@@ -40,6 +45,8 @@ INSERT INTO category_attributes (category_id, name, type) VALUES (5, 'Type', 'ST
 INSERT INTO category_attributes (category_id, name, type) VALUES (5, 'Ideal Region', 'STRING'); --14
 INSERT INTO category_attributes (category_id, name, type) VALUES (5, 'Advantages', 'STRING'); --15
 INSERT INTO category_attributes (category_id, name, type) VALUES (5, 'Soil type', 'STRING'); --16
+INSERT INTO category_attributes (category_id, name, type) VALUES (6, 'Type', 'STRING'); --17
+INSERT INTO category_attributes (category_id, name, type) VALUES (6, 'Quantity/Package', 'STRING'); --18
 
 
 -- 1
@@ -117,9 +124,18 @@ INSERT INTO product_ads (user_id, category_id, title, description, price, type, 
 INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (1, 1, 'green');
 INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (1, 2, '2');
 INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (1, 3, 'true');
+INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (2, 7, 'Ancona');
+INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (2, 8, '1');
+INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (2, 9, 'Female');
+INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (2, 10, '6');
+INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (3, 17, 'Meat');
+INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (3, 18, '1kg/pkg');
 INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (4, 4, '3');
 INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (4, 5, 'brown');
 INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (4, 6, 'right here bro');
+INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (5, 1, 'Green');
+INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (5, 2, '10');
+INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (5, 3, 'true');
 
 INSERT INTO product_pictures (product_id) VALUES (1); -- 1
 INSERT INTO product_pictures (product_id) VALUES (1); -- 2
