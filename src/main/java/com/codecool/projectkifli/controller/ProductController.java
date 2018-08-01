@@ -63,4 +63,12 @@ public class ProductController {
         return productService.search(searchString);
     }
 
+    @GetMapping(
+            value = "user-products/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public List<Product> getUserProducts(@PathVariable("id") int id) {
+        return productService.getUserProducts(id);
+    }
+
 }
