@@ -14,7 +14,7 @@ INSERT INTO authorities (username, authority) VALUES ('Isti', 'ROLE_ADMIN');
 INSERT INTO authorities (username, authority) VALUES ('Anna', 'ROLE_REGULAR');
 INSERT INTO authorities (username, authority) VALUES ('Béla', 'ROLE_REGULAR');
 
-INSERT INTO credentials (user_id, phone, country, state, city, street) VALUES (1, '70 007 0007', 'Hungary', 'Borsod Abaúj Zemplén', 'Szalonta', 'Fa utca 2');
+INSERT INTO credentials (user_id, phone, country, state, city, street) VALUES (1, '70 007 0007', 'Hungary', 'Borsod Abaúj Zemplén', 'Szalonna', 'Fa utca 2');
 INSERT INTO credentials (user_id, phone, country, state, city, street) VALUES (2, '70 007 0008', 'Hungary', 'Borsod Abaúj Zemplén', 'Miskolc', 'Hajós Alfréd utca 4');
 INSERT INTO credentials (user_id, phone, country, state, city, street) VALUES (3, '70 007 0001', 'Hungary', 'Heves', 'Eger', 'Dobó István utca 4');
 INSERT INTO credentials (user_id, phone, country, state, city, street) VALUES (4, '70 007 0010', 'Hungary', 'A', 'B', 'C utca x+y^2');
@@ -136,6 +136,10 @@ INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (4, 6, '
 INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (5, 1, 'Green');
 INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (5, 2, '10');
 INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (5, 3, 'true');
+INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (6, 11, 'steel');
+INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (6, 12, 'false');
+INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (7, 11, 'Wood');
+INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (7, 12, 'true');
 
 INSERT INTO product_pictures (product_id) VALUES (1); -- 1
 INSERT INTO product_pictures (product_id) VALUES (1); -- 2
