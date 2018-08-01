@@ -84,4 +84,8 @@ public class ProductService {
             productAttributeRepository.save(productAttribute);
         }
     }
+
+    public List<ProductListItem> getProductsByCategory(Integer id) {
+        return productListItemRepository.findByCategoryId(id);
+    }
 }

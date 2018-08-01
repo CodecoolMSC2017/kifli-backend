@@ -13,7 +13,6 @@ import java.util.Map;
 public class ProductDetailsDto {
 
     private Integer id;
-    private Integer ownerId;
     private String title;
     private String description;
     private Float price;
@@ -25,7 +24,7 @@ public class ProductDetailsDto {
     private String categoryName;
     private Map<String, String> attributes;
     private String ownerEmail;
-    private String ownerPhone = "test";
+    private String ownerPhone;
 
     public ProductDetailsDto(Product product) {
         this.id = product.getId();
@@ -42,9 +41,8 @@ public class ProductDetailsDto {
         this.attributes = setupAttributes(product);
 
         User owner = product.getOwner();
-        this.ownerId = owner.getId();
         this.ownerEmail = owner.getEmail();
-        // this.ownerPhone = owner.getCredentials().getPhone();
+        this.ownerPhone = owner.getCredentials().getPhone();
     }
 
     private Map<String, String> setupAttributes(Product product) {
@@ -70,10 +68,6 @@ public class ProductDetailsDto {
 
     public Integer getId() {
         return id;
-    }
-
-    public Integer getOwnerId() {
-        return ownerId;
     }
 
     public String getTitle() {

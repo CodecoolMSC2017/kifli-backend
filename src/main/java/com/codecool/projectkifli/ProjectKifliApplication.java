@@ -34,7 +34,7 @@ public class ProjectKifliApplication extends WebSecurityConfigurerAdapter {
                 .disable()
                 .authorizeRequests()
                 .antMatchers("/register").anonymous()
-                .antMatchers("/products/**", "/images/**").permitAll()
+                .antMatchers("/products/**", "/images/**", "/categories/**").permitAll()
                 .antMatchers("/users").hasRole("ADMIN")
                 .antMatchers("/users/**").authenticated()
                 .anyRequest().authenticated()

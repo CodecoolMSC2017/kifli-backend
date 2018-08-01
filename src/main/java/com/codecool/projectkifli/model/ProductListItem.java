@@ -18,6 +18,10 @@ public class ProductListItem {
     private String uploadDate;
     private String premiumExpirationDate;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "categoryId", referencedColumnName = "id")
+    private Category category;
+
     @ElementCollection
     @CollectionTable(
             name = "product_pictures",
@@ -99,5 +103,9 @@ public class ProductListItem {
 
     public void setPictureIds(List<Integer> pictureIds) {
         this.pictureIds = pictureIds;
+    }
+
+    public String getCategory() {
+        return category.getName();
     }
 }

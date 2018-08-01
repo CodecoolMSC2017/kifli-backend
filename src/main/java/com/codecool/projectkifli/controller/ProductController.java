@@ -71,4 +71,12 @@ public class ProductController {
         return productService.getUserProducts(userId);
     }
 
+    @GetMapping(
+            value = "category/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public List<ProductListItem> getByCategory(@PathVariable("id") Integer id) {
+        return productService.getProductsByCategory(id);
+    }
+
 }
