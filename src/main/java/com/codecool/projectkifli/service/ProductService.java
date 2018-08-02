@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -48,17 +49,17 @@ public class ProductService {
         throw new AccessDeniedException("TAKA");
     }
 
-    public List<ProductListItem> search(String searchString, int categoryId) {
+    public List<ProductListItem> search(String searchString, int categoryId, float minimumPrice, float maximumPrice) {
         if (searchString.equals("")) {
             if (categoryId == 0) {
-                return productListItemRepository.findAll();
+                return filterByPrice(productListItemRepository.findAll(), minimumPrice, maximumPrice);
             }
-            return productListItemRepository.findByCategoryId(categoryId);
+            return filterByPrice(productListItemRepository.findByCategoryId(categoryId), minimumPrice, maximumPrice);
         }
         if (categoryId == 0) {
-            return productListItemRepository.findBySearchTitleString(searchString);
+            return filterByPrice(productListItemRepository.findBySearchTitleString(searchString), minimumPrice, maximumPrice);
         }
-        return productListItemRepository.findBySearchTitleStringAndCategoryId(searchString, categoryId);
+        return filterByPrice(productListItemRepository.findBySearchTitleStringAndCategoryId(searchString, categoryId), minimumPrice, maximumPrice);
     }
 
     public List<ProductListItem> getUserProducts(Integer userId) {
@@ -96,5 +97,16 @@ public class ProductService {
 
     public List<ProductListItem> getProductsByCategory(Integer id) {
         return productListItemRepository.findByCategoryId(id);
+    }
+
+    private List<ProductListItem> filterByPrice(List<ProductListItem> products, float minimum, float maximum) {
+        List<ProductListItem> filteredList = new ArrayList<>();
+        for (ProductListItem product : products) {
+            float price = product.getPrice();
+            if (price >= minimum && price <= maximum) {
+                filteredList.add(product);
+            }
+        }
+        return filteredList;
     }
 }

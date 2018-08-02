@@ -61,9 +61,11 @@ public class ProductController {
     )
     public List<ProductListItem> findBySearchTitle(
             @RequestParam("search") String searchString,
-            @RequestParam("categoryId") int categoryId
+            @RequestParam("categoryId") int categoryId,
+            @RequestParam("minimumPrice") float minimumPrice,
+            @RequestParam("maximumPrice") float maximumPrice
     ) {
-        return productService.search(searchString, categoryId);
+        return productService.search(searchString, categoryId, minimumPrice, maximumPrice);
     }
 
     @GetMapping(
