@@ -4,6 +4,8 @@ import com.codecool.projectkifli.dto.UserCredentialsDto;
 import com.codecool.projectkifli.dto.UserDto;
 import com.codecool.projectkifli.model.User;
 import com.codecool.projectkifli.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +16,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/users")
 public class UserController {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private UserService userService;
@@ -50,6 +54,7 @@ public class UserController {
         String oldPassword = map.get("oldPassword");
         String newPassword = map.get("newPassword");
         String confirmationPassword = map.get("confirmationPassword");
+        System.out.println(oldPassword+ newPassword+ confirmationPassword);
         userService.changePassword(oldPassword, newPassword, confirmationPassword);
     }
 
