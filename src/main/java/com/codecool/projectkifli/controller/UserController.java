@@ -39,10 +39,10 @@ public class UserController {
         String username = map.get("username");
         String email = map.get("email");
         String password = map.get("password");
-        String confirmationPassword = map.get("confirmationPassword");
+        String confirmPassword = map.get("confirmPassword");
         String firstName = map.get("firstName");
         String lastName = map.get("lastName");
-        return userService.add(username, email, password, confirmationPassword, firstName, lastName);
+        return userService.add(username, email, password, confirmPassword, firstName, lastName);
     }
 
     @PostMapping("/change-password")

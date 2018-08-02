@@ -33,11 +33,22 @@ public class UserService {
     }
 
     @Transactional
-    public User add(String username, String email, String password, String confirmationPassword, String firstName, String lastName) {
-        if (!password.equals(confirmationPassword)) {
+    public User add(String username, String email, String password, String confirmPassword, String firstName, String lastName) {
+        System.out.println(password);
+        System.out.println(confirmPassword);
+        System.out.println(username);
+        System.out.println(email);
+        System.out.println(firstName);
+        System.out.println(lastName);
+        if (!password.equals(confirmPassword) ||
+                username.equals(null) || username == "" ||
+                email.equals(null) || email == "" ||
+                password.equals(null) || password == "" ||
+                confirmPassword.equals(null) || confirmPassword == "" ||
+                firstName.equals(null) || firstName == "" ||
+                lastName.equals(null) || lastName == "") {
             throw new IllegalArgumentException();
         }
-
         userDetailsManager.createUser(new org.springframework.security.core.userdetails.User(
                 username,
                 passwordEncoder.encode(password),
