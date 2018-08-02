@@ -14,12 +14,12 @@ public class RegisterController {
 
     @PostMapping("/register")
     public void register(@RequestBody Map<String, String> map) {
-        String username = map.get("username");
+        String username = map.get("userName");
         String email = map.get("email");
         String password = map.get("password");
-        String confirmationPassword = map.get("confirmationPassword");
+        String confirmPassword = map.get("confirmPassword");
         String firstName = map.get("firstName");
         String lastName = map.get("lastName");
-        userService.add(username, email, password, confirmationPassword, firstName, lastName);
+        userService.add(username, email, password, confirmPassword, firstName, lastName);
     }
 }
