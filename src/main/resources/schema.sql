@@ -12,11 +12,11 @@ DROP TYPE IF EXISTS data_type;
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
-    email VARCHAR(30) NOT NULL UNIQUE,
+    email VARCHAR(30) UNIQUE,
     password VARCHAR(100) NOT NULL,
     enabled BOOLEAN NOT NULL,
-    first_name VARCHAR(20) NOT NULL,
-    last_name VARCHAR(20) NOT NULL
+    first_name VARCHAR(20),
+    last_name VARCHAR(20)
 );
 
 CREATE TABLE authorities (

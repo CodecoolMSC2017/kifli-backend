@@ -40,7 +40,13 @@ public class UserService {
         System.out.println(email);
         System.out.println(firstName);
         System.out.println(lastName);
-        if (!password.equals(confirmPassword)) {
+        if (!password.equals(confirmPassword) ||
+                username.equals(null) || username == "" ||
+                email.equals(null) || email == "" ||
+                password.equals(null) || password == "" ||
+                confirmPassword.equals(null) || confirmPassword == "" ||
+                firstName.equals(null) || firstName == "" ||
+                lastName.equals(null) || lastName == "") {
             throw new IllegalArgumentException();
         }
         userDetailsManager.createUser(new org.springframework.security.core.userdetails.User(
