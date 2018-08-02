@@ -56,11 +56,14 @@ public class ProductController {
     }
 
     @GetMapping(
-            value = "search/{searchString}",
+            value = "search",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public List<Product> findBySearchTitle(@PathVariable("searchString") String searchString) {
-        return productService.search(searchString);
+    public List<ProductListItem> findBySearchTitle(
+            @RequestParam("search") String searchString,
+            @RequestParam("categoryId") int categoryId
+    ) {
+        return productService.search(searchString, categoryId);
     }
 
     @GetMapping(

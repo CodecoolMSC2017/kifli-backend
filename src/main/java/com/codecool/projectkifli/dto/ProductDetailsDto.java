@@ -25,6 +25,7 @@ public class ProductDetailsDto {
     private Map<String, String> attributes;
     private String ownerEmail;
     private String ownerPhone;
+    private Integer ownerId;
 
     public ProductDetailsDto(Product product) {
         this.id = product.getId();
@@ -43,6 +44,7 @@ public class ProductDetailsDto {
         User owner = product.getOwner();
         this.ownerEmail = owner.getEmail();
         this.ownerPhone = owner.getCredentials().getPhone();
+        this.ownerId = owner.getId();
     }
 
     private Map<String, String> setupAttributes(Product product) {
@@ -116,5 +118,9 @@ public class ProductDetailsDto {
 
     public String getOwnerPhone() {
         return ownerPhone;
+    }
+
+    public Integer getOwnerId() {
+        return ownerId;
     }
 }

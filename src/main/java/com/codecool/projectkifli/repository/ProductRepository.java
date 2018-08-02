@@ -11,8 +11,5 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 
-    @Query(value = "SELECT * FROM product_ads WHERE lower(title) LIKE %?1%", nativeQuery = true)
-    List<Product> findBySearchTitleString(String searchString);
-
     List<Product> findByOwnerId(Integer userId);
 }

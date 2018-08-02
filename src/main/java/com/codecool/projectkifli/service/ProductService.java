@@ -48,8 +48,17 @@ public class ProductService {
         throw new AccessDeniedException("TAKA");
     }
 
-    public List<Product> search(String searchString) {
-        return productRepository.findBySearchTitleString(searchString.toLowerCase());
+    public List<ProductListItem> search(String searchString, int categoryId) {
+        if (searchString.equals("")) {
+            if (categoryId == 0) {
+                return productListItemRepository.findAll();
+            }
+            return productListItemRepository.findByCategoryId(categoryId);
+        }
+        if (categoryId == 0) {
+            return productListItemRepository.findBySearchTitleString(searchString);
+        }
+        return productListItemRepository.findBySearchTitleStringAndCategoryId(searchString, categoryId);
     }
 
     public List<ProductListItem> getUserProducts(Integer userId) {
