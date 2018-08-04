@@ -1,8 +1,10 @@
 package com.codecool.projectkifli.service;
 
+import com.codecool.projectkifli.dto.ProductListDto;
 import com.codecool.projectkifli.model.*;
 import com.codecool.projectkifli.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -49,21 +51,23 @@ public class ProductService {
         throw new AccessDeniedException("TAKA");
     }
 
-    public List<ProductListItem> search(String searchString, int categoryId, float minimumPrice, float maximumPrice) {
-        if (searchString.equals("")) {
-            if (categoryId == 0) {
+    public ProductListDto getFilteredProducts(String searchString, Integer categoryId, Float minimumPrice, Float maximumPrice) {
+        if (searchString == null || searchString.equals("")) {
+            if (categoryId == null || categoryId == 0) {
                 return filterByPrice(productListItemRepository.findAll(), minimumPrice, maximumPrice);
             }
             return filterByPrice(productListItemRepository.findByCategoryId(categoryId), minimumPrice, maximumPrice);
         }
-        if (categoryId == 0) {
+        if (categoryId == null || categoryId == 0) {
             return filterByPrice(productListItemRepository.findBySearchTitleString(searchString), minimumPrice, maximumPrice);
         }
         return filterByPrice(productListItemRepository.findBySearchTitleStringAndCategoryId(searchString, categoryId), minimumPrice, maximumPrice);
     }
 
-    public List<ProductListItem> getUserProducts(Integer userId) {
-        return productListItemRepository.findAllByUserId(userId);
+    public ProductListDto getUserProducts(Integer userId) {
+        ProductListDto dto = new ProductListDto(categoryRespository.findAll());
+        dto.setProducts(productListItemRepository.findAllByUserId(userId));
+        return dto;
     }
 
     public void add(ProductPostData data, Principal principal) throws ParseException {
@@ -99,7 +103,18 @@ public class ProductService {
         return productListItemRepository.findByCategoryId(id);
     }
 
-    private List<ProductListItem> filterByPrice(List<ProductListItem> products, float minimum, float maximum) {
+    private ProductListDto filterByPrice(List<ProductListItem> products, Float minimum, Float maximum) {
+        ProductListDto dto = new ProductListDto(categoryRespository.findAll());
+        if (minimum == null && maximum == null) {
+            dto.setProducts(products);
+            return dto;
+        }
+        if (minimum == null) {
+            minimum = (float) 0;
+        }
+        if (maximum == null) {
+            maximum = (float) 999999999;
+        }
         List<ProductListItem> filteredList = new ArrayList<>();
         for (ProductListItem product : products) {
             float price = product.getPrice();
@@ -107,6 +122,7 @@ public class ProductService {
                 filteredList.add(product);
             }
         }
-        return filteredList;
+        dto.setProducts(filteredList);
+        return dto;
     }
 }

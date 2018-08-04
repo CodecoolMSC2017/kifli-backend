@@ -1,8 +1,8 @@
 package com.codecool.projectkifli.controller;
 
 import com.codecool.projectkifli.dto.ProductDetailsDto;
+import com.codecool.projectkifli.dto.ProductListDto;
 import com.codecool.projectkifli.model.Product;
-import com.codecool.projectkifli.model.ProductListItem;
 import com.codecool.projectkifli.model.ProductPostData;
 import com.codecool.projectkifli.service.ProductService;
 import org.slf4j.Logger;
@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.MediaType;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -24,14 +25,6 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
-
-    @GetMapping(
-            value = "",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public List<ProductListItem> getAllProducts() {
-        return productService.findAll();
-    }
 
     @GetMapping(
             value = "/{id}",
@@ -56,32 +49,25 @@ public class ProductController {
     }
 
     @GetMapping(
-            value = "search",
+            value = "",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public List<ProductListItem> findBySearchTitle(
-            @RequestParam("search") String searchString,
-            @RequestParam("categoryId") int categoryId,
-            @RequestParam("minimumPrice") float minimumPrice,
-            @RequestParam("maximumPrice") float maximumPrice
+    public ProductListDto getProducts(
+            @Nullable @RequestParam("search") String searchString,
+            @Nullable @RequestParam("categoryId") Integer categoryId,
+            @Nullable @RequestParam("minimumPrice") Float minimumPrice,
+            @Nullable @RequestParam("maximumPrice") Float maximumPrice
     ) {
-        return productService.search(searchString, categoryId, minimumPrice, maximumPrice);
+        System.out.println("ProductController: " + searchString + " " + categoryId + " " + minimumPrice + " " + maximumPrice);
+        return productService.getFilteredProducts(searchString, categoryId, minimumPrice, maximumPrice);
     }
 
     @GetMapping(
             value = "user/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public List<ProductListItem> getUserProducts(@PathVariable("id") Integer userId) {
+    public ProductListDto getUserProducts(@PathVariable("id") Integer userId) {
         return productService.getUserProducts(userId);
-    }
-
-    @GetMapping(
-            value = "category/{id}",
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public List<ProductListItem> getByCategory(@PathVariable("id") Integer id) {
-        return productService.getProductsByCategory(id);
     }
 
 }
