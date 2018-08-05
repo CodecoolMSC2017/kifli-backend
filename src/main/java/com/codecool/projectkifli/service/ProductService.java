@@ -14,6 +14,7 @@ import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -45,10 +46,10 @@ public class ProductService {
     }
 
     public ProductDetailsDto findById(Integer id) {
-        logger.debug("Getting product with id " + id);
+        logger.debug("Getting product {}", id);
         Product product = productRepository.findById(id).orElse(null);
         if (product == null) {
-            logger.warn("Did not find product {}", id);
+            logger.error("Did not find product {}", id);
             return null;
         }
         return new ProductDetailsDto(product);
@@ -57,43 +58,43 @@ public class ProductService {
     public void delete(Integer id, Principal principal) {
         User user = userRepository.findByUsername(principal.getName()).orElse(null);
         if (user == null) {
-            logger.warn("User trying to delete product " + id + " is not logged in");
+            logger.error("Did not find user {} trying to delete product {}", principal.getName(), id);
             return;
         }
         Product product = productRepository.findById(id).orElse(null);
         if (product == null) {
-            logger.warn("Did not find product " + id);
+            logger.error("Did not find product {}", id);
             return;
         }
         if (product.getOwner().getId().equals(user.getId()) || user.getAuthorities().contains("ROLE_ADMIN")) {
-            logger.debug("Deleting product " + id);
+            logger.info("Deleting product {}", id);
             productRepository.deleteById(id);
             return;
         }
-        logger.warn("User " + principal.getName() + " is not authorized to delete product " + id);
+        logger.error("User {} is not authorized to delete product {}", principal.getName(), id);
         throw new AccessDeniedException("TAKA");
     }
 
     public ProductListDto getFilteredProducts(String searchString, Integer categoryId, Float minimumPrice, Float maximumPrice) {
-        logger.trace("Filtering products: searchString={}, categoryId={}, minPrice={}, maxPrice={}", searchString, categoryId, minimumPrice, maximumPrice);
+        logger.debug("Filtering products: searchString={}, categoryId={}, minPrice={}, maxPrice={}", searchString, categoryId, minimumPrice, maximumPrice);
         if (searchString == null || searchString.equals("")) {
             if (categoryId == null || categoryId == 0) {
-                logger.trace("Returning all products");
+                logger.trace("Finding all products");
                 return filterByPrice(productListItemRepository.findAll(), minimumPrice, maximumPrice);
             }
             logger.trace("Filtering by category {}", categoryId);
             return filterByPrice(productListItemRepository.findByCategoryId(categoryId), minimumPrice, maximumPrice);
         }
         if (categoryId == null || categoryId == 0) {
-            logger.trace("Filtering by search string {}", searchString);
+            logger.trace("Filtering by searchString '{}'", searchString);
             return filterByPrice(productListItemRepository.findBySearchTitleString(searchString), minimumPrice, maximumPrice);
         }
-        logger.trace("Filtering by searchString {} and category {}", searchString, categoryId);
+        logger.trace("Filtering by searchString '{}' and category {}", searchString, categoryId);
         return filterByPrice(productListItemRepository.findBySearchTitleStringAndCategoryId(searchString, categoryId), minimumPrice, maximumPrice);
     }
 
     public ProductListDto getUserProducts(Integer userId) {
-        logger.debug("Getting products of user " + userId);
+        logger.debug("Getting products of user {}", userId);
         ProductListDto dto = new ProductListDto(categoryRespository.findAll());
         dto.setProducts(productListItemRepository.findAllByUserId(userId));
         return dto;
@@ -102,7 +103,7 @@ public class ProductService {
     public void add(ProductPostData data, Principal principal) throws ParseException {
         User user = userRepository.findByUsername(principal.getName()).orElse(null);
         if (user == null) {
-            logger.warn("User trying to add new product is not logged in");
+            logger.error("Did not find user {}", principal.getName());
             return;
         }
         SimpleProduct product = new SimpleProduct();
@@ -113,18 +114,20 @@ public class ProductService {
         product.setPrice(data.getPrice());
         product.setType("BUYOUT");
         product.setState("FOR SALE");
-        product.setUploadDate(simpleDateFormat.parse("2017/10/01"));
+        Date date = new Date();
+        String formattedDate = simpleDateFormat.format(date);
+        product.setUploadDate(simpleDateFormat.parse(formattedDate));
         product.setPremiumExpirationDate(simpleDateFormat.parse("2020/12/02"));
 
         SimpleProduct save = simpleProductRepository.save(product);
-        logger.debug("Saved product " + save.getId() + " in database, inserting attributes now");
+        logger.info("Added new product {}", save.getId());
         insertAttributes(data.getAttributes(), save.getId(), data.getCategoryId());
     }
 
     private void insertAttributes(Map<String, String> attributes, Integer productId, Integer categoryId) {
         Category category = categoryRespository.findById(categoryId).orElse(null);
         if (category == null) {
-            logger.warn("Did not find category " + categoryId);
+            logger.error("Did not find category {}", categoryId);
             return;
         }
         int insertCount = 0;
@@ -137,7 +140,7 @@ public class ProductService {
             productAttributeRepository.save(productAttribute);
             insertCount++;
         }
-        logger.debug("Inserted " + insertCount + " attributes for product " + productId);
+        logger.debug("Inserted {} attributes for product {}", insertCount, productId);
     }
 
     private ProductListDto filterByPrice(List<ProductListItem> products, Float minimum, Float maximum) {
@@ -147,13 +150,13 @@ public class ProductService {
             dto.setProducts(products);
             return dto;
         }
-        logger.trace("Filtering price between " + minimum + " and " + maximum);
         if (minimum == null) {
             minimum = (float) 0;
         }
         if (maximum == null) {
             maximum = (float) 999999999;
         }
+        logger.trace("Filtering price between {} and {}", minimum, maximum);
         List<ProductListItem> filteredList = new ArrayList<>();
         for (ProductListItem product : products) {
             float price = product.getPrice();
