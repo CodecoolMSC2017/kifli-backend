@@ -7,8 +7,10 @@ import com.codecool.projectkifli.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -61,5 +63,20 @@ public class UserController {
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") Integer id) {
         userService.delete(id);
+    }
+
+    @GetMapping(
+            value = "/current",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public UserCredentialsDto getLoggedInUser(Principal principal) {
+        if (principal == null) {
+            return null;
+        }
+        User user = userService.get(principal.getName()).orElse(null);
+        if (user == null) {
+            return null;
+        }
+        return new UserCredentialsDto(user);
     }
 }
