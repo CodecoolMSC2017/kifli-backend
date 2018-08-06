@@ -12,6 +12,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import java.text.ParseException;
 
@@ -28,18 +29,23 @@ public class ProductController {
             value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ProductDetailsDto findById(@PathVariable("id") Integer id) {
+    public ProductDetailsDto findById(@PathVariable("id") Integer id, HttpServletResponse resp) {
         logger.trace("Get product {}", id);
-        return productService.findById(id);
+        ProductDetailsDto dto = productService.findById(id);
+        if (dto == null) {
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+        return dto;
     }
 
     @DeleteMapping(value = "/{id}")
     public void delete(@PathVariable("id") Integer id, Principal principal) {
+        logger.trace("Delete product {}", id);
         if (principal == null) {
             logger.error("Anonymous user trying to delete product {}", id);
             throw new AccessDeniedException("Can't delete product without login");
         }
-        logger.trace("Delete product {} by user {}", id, principal.getName());
+        logger.info("Delete product {} by user {}", id, principal.getName());
         productService.delete(id, principal);
     }
 

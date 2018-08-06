@@ -1,7 +1,11 @@
 package com.codecool.projectkifli.service;
 
+import com.codecool.projectkifli.dto.UserCredentialsDto;
+import com.codecool.projectkifli.dto.UserDto;
 import com.codecool.projectkifli.model.User;
 import com.codecool.projectkifli.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,10 +14,14 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -24,8 +32,13 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public Iterable<User> getAll() {
-        return userRepository.findAll();
+    public List<UserDto> getAll() {
+        logger.debug("Finding all users");
+        List<User> users = userRepository.findAll();
+        logger.trace("Found {} users in total, creating dtos", users.size());
+        List<UserDto> userDtos = new ArrayList<>();
+        users.forEach(user -> userDtos.add(new UserDto(user)));
+        return userDtos;
     }
 
     public Optional<User> get(String username) {
@@ -54,8 +67,14 @@ public class UserService {
         return user;
     }
 
-    public Optional<User> get(Integer id) {
-        return userRepository.findById(id);
+    public UserCredentialsDto get(Integer id) {
+        logger.debug("Finding user {}", id);
+        User user =  userRepository.findById(id).orElse(null);
+        if (user == null) {
+            logger.error("Did not find user {}", id);
+            return null;
+        }
+        return new UserCredentialsDto(user);
     }
 
     public void delete(Integer id) {

@@ -11,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -25,19 +24,15 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("")
-    public Iterable<UserDto> getAll() {
-        List<UserDto> userDtos = new ArrayList<>();
-        userService.getAll().forEach(user -> userDtos.add(new UserDto(user)));
-        return userDtos;
+    public List<UserDto> getAll() {
+        logger.trace("Get all users");
+        return userService.getAll();
     }
 
     @GetMapping("/{id}")
     public UserCredentialsDto get(@PathVariable("id") Integer id) {
-        User user = userService.get(id).orElse(null);
-        if (user == null) {
-            return null;
-        }
-        return new UserCredentialsDto(user);
+        logger.trace("Get user {}", id);
+        return userService.get(id);
     }
 
     @PostMapping("")
@@ -70,13 +65,17 @@ public class UserController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public UserCredentialsDto getLoggedInUser(Principal principal) {
+        logger.trace("Get current user");
         if (principal == null) {
+            logger.debug("Not logged in, returning null");
             return null;
         }
         User user = userService.get(principal.getName()).orElse(null);
         if (user == null) {
+            logger.error("Did not find user {}", principal.getName());
             return null;
         }
+        logger.trace("Creating and returning dto");
         return new UserCredentialsDto(user);
     }
 }
