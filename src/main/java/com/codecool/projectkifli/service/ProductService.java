@@ -112,10 +112,9 @@ public class ProductService {
         product.setTitle(data.getTitle());
         product.setDescription(data.getDescription());
         product.setPrice(data.getPrice());
-        product.setType("BUYOUT");
+        product.setType(data.getType());
         product.setState("FOR SALE");
-        Date date = new Date();
-        String formattedDate = simpleDateFormat.format(date);
+        String formattedDate = simpleDateFormat.format(new Date());
         product.setUploadDate(simpleDateFormat.parse(formattedDate));
         product.setPremiumExpirationDate(simpleDateFormat.parse("2020/12/02"));
 

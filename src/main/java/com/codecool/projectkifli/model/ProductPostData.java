@@ -7,6 +7,7 @@ public class ProductPostData {
     private String title;
     private String description;
     private Float price;
+    private String type;
     private Map<String, String> attributes;
     private Integer categoryId;
 
@@ -35,6 +36,14 @@ public class ProductPostData {
 
     public void setPrice(Float price) {
         this.price = price;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Map<String, String> getAttributes() {
