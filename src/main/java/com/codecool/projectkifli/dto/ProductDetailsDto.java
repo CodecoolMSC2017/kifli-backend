@@ -23,9 +23,10 @@ public class ProductDetailsDto {
     private List<Integer> pictureIds;
     private String categoryName;
     private Map<String, String> attributes;
+    private Integer ownerId;
+    private String ownerName;
     private String ownerEmail;
     private String ownerPhone;
-    private Integer ownerId;
 
     public ProductDetailsDto(Product product) {
         this.id = product.getId();
@@ -42,9 +43,10 @@ public class ProductDetailsDto {
         this.attributes = setupAttributes(product);
 
         User owner = product.getOwner();
+        this.ownerId = owner.getId();
+        this.ownerName = owner.getFirstName() + " " + owner.getLastName();
         this.ownerEmail = owner.getEmail();
         this.ownerPhone = owner.getCredentials().getPhone();
-        this.ownerId = owner.getId();
     }
 
     private Map<String, String> setupAttributes(Product product) {
@@ -112,15 +114,19 @@ public class ProductDetailsDto {
         return attributes;
     }
 
+    public Integer getOwnerId() {
+        return ownerId;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
     public String getOwnerEmail() {
         return ownerEmail;
     }
 
     public String getOwnerPhone() {
         return ownerPhone;
-    }
-
-    public Integer getOwnerId() {
-        return ownerId;
     }
 }
