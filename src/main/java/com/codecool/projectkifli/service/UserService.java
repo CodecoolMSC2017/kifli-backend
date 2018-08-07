@@ -41,8 +41,9 @@ public class UserService {
         return userDtos;
     }
 
-    public Optional<User> get(String username) {
-        return userRepository.findByUsername(username);
+    public User get(String username) {
+        logger.debug("Finding user {}", username);
+        return userRepository.findByUsername(username).orElse(null);
     }
 
     @Transactional

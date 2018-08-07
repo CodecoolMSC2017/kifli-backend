@@ -26,18 +26,18 @@ public class AuthController {
     @GetMapping("")
     public UserCredentialsDto get(Principal principal) {
         logger.trace("Get user {}", principal.getName());
-        User user = userService.get(principal.getName()).orElse(null);
+        User user = userService.get(principal.getName());
         if (user == null) {
             logger.error("Did not find user {}", principal.getName());
             return null;
         }
-        logger.debug("User {} has logged in successfully", user.getUsername());
+        logger.info("User {} has logged in successfully", user.getUsername());
         return new UserCredentialsDto(user);
     }
 
     @DeleteMapping("")
     public void delete(HttpSession session, Principal principal) {
-        logger.debug("User {} has logged out", principal.getName());
+        logger.info("User {} has logged out", principal.getName());
         session.invalidate();
     }
 }

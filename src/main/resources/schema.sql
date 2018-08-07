@@ -62,7 +62,7 @@ CREATE TABLE category_attributes (
     id SERIAL PRIMARY KEY,
     category_id INTEGER,
     name VARCHAR(20) NOT NULL,
-    type data_type NOT NULL,
+    type VARCHAR(15) NOT NULL,
     FOREIGN KEY (category_id) REFERENCES categories(id),
     UNIQUE (category_id, name)
 );

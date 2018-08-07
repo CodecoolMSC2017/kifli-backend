@@ -70,7 +70,7 @@ public class UserController {
             logger.debug("Not logged in, returning null");
             return null;
         }
-        User user = userService.get(principal.getName()).orElse(null);
+        User user = userService.get(principal.getName());
         if (user == null) {
             logger.error("Did not find user {}", principal.getName());
             return null;
