@@ -1,56 +1,37 @@
 package com.codecool.projectkifli.controller;
 
+import com.codecool.projectkifli.service.ImageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/images")
 public class ImageController {
+
+    private static final Logger logger = LoggerFactory.getLogger(ImageController.class);
+
+    @Autowired
+    private ImageService imageService;
 
     @GetMapping(
             value = "/{id}",
             produces = MediaType.IMAGE_JPEG_VALUE
     )
     public byte[] getImageById(@PathVariable("id") String id) {
-        String url = System.getProperty("user.home") + "/kifli-images";
-        if (new File(url).mkdir()) {
-            return null;
-        }
-        try {
-            String path = url + "/" + id;
-            File file = getExistingFile(path);
-            BufferedImage image = ImageIO.read(file);
-
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(image, "jpeg", baos);
-
-            return baos.toByteArray();
-        } catch (IOException e) {
-            return null;
-        }
+        logger.trace("Get image {}", id);
+        return imageService.getById(id);
     }
 
-    private File getExistingFile(String path) {
-        File file = new File(path + ".jpg");
-        if (!file.exists()) {
-            file = new File(path + ".jpeg");
-        }
-        if (!file.exists()) {
-            file = new File(path + ".JPG");
-        }
-        if (!file.exists()) {
-            file = new File(path + ".JPEG");
-        }
-        return file;
+    @PostMapping(
+            value = "",
+            consumes = MediaType.IMAGE_JPEG_VALUE
+    )
+    public void saveImage(@RequestBody byte[] data, @RequestHeader("productId") Integer productId) {
+        logger.trace("Post for product {}", productId);
+        imageService.insert(data, productId);
     }
 
 }

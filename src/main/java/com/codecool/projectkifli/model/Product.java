@@ -23,7 +23,7 @@ public class Product implements Serializable {
     @ElementCollection
     @CollectionTable(
             name = "product_pictures",
-            joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id")
+            joinColumns = @JoinColumn(name = "productId", referencedColumnName = "id")
     )
     @Column(name = "id")
     private List<Integer> pictureIds;
