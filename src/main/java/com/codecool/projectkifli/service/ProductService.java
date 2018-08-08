@@ -100,11 +100,11 @@ public class ProductService {
         return dto;
     }
 
-    public void add(ProductPostData data, Principal principal) throws ParseException {
+    public ProductDetailsDto add(ProductPostData data, Principal principal) throws ParseException {
         User user = userRepository.findByUsername(principal.getName()).orElse(null);
         if (user == null) {
             logger.error("Did not find user {}", principal.getName());
-            return;
+            return null;
         }
         SimpleProduct product = new SimpleProduct();
         product.setUserId(user.getId());
@@ -121,6 +121,7 @@ public class ProductService {
         SimpleProduct save = simpleProductRepository.save(product);
         logger.info("Added new product {}", save.getId());
         insertAttributes(data.getAttributes(), save.getId(), data.getCategoryId());
+        return findById(save.getId());
     }
 
     private void insertAttributes(Map<String, String> attributes, Integer productId, Integer categoryId) {

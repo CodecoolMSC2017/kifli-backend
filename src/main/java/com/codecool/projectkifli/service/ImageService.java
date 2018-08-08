@@ -22,7 +22,7 @@ public class ImageService {
 
     public byte[] getById(String id) {
         if (new File(imagesDir).mkdir()) {
-            logger.error("kifli-images did not exist on this computer");
+            logger.error("Image folder did not exist on this computer");
             return null;
         }
         try {
@@ -35,7 +35,7 @@ public class ImageService {
 
             return baos.toByteArray();
         } catch (IOException e) {
-            logger.error("Error sending image {}", id, e);
+            logger.error("Error sending image {}", id);
             return null;
         }
     }
@@ -59,7 +59,7 @@ public class ImageService {
         productPicture.setProductId(productId);
 
         ProductPicture save = imageRepository.save(productPicture);
-        logger.debug("Inserted picture {} for product {}", save.getId(), save.getProductId());
+        logger.debug("Inserted picture {} for product {} into database", save.getId(), save.getProductId());
 
         saveFile(save.getId(), productId, data);
     }
@@ -72,7 +72,7 @@ public class ImageService {
                 logger.trace("Creating file {}", path);
                 file.createNewFile();
             } catch (IOException e) {
-                logger.error("Error creating file {}", path, e);
+                logger.error("Error creating file {}", path);
             }
         } else {
             logger.warn("File {} already exists", path);
@@ -82,9 +82,9 @@ public class ImageService {
             fileOutputStream.write(data);
             logger.info("Saved image {} for product {}", id, productId);
         } catch (FileNotFoundException e) {
-            logger.error("File {} does not exist", path, e);
+            logger.error("File {} does not exist", path);
         } catch (IOException e) {
-            logger.error("Error creating file {}", path, e);
+            logger.error("Error creating file {}", path);
         }
     }
 }

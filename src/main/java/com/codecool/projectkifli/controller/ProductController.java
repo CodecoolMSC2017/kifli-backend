@@ -53,13 +53,13 @@ public class ProductController {
             value = "",
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public void postAd(@RequestBody ProductPostData data, Principal principal) throws ParseException {
+    public ProductDetailsDto postAd(@RequestBody ProductPostData data, Principal principal) throws ParseException {
         if (principal == null) {
             logger.error("Anonymous user trying to add new product");
             throw new AccessDeniedException("Can't add new product without login");
         }
         logger.trace("Post by user {}", principal.getName());
-        productService.add(data, principal);
+        return productService.add(data, principal);
     }
 
     @GetMapping(
