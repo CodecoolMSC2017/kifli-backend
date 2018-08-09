@@ -1,9 +1,6 @@
 package com.codecool.projectkifli.dto;
 
-import com.codecool.projectkifli.model.CategoryAttribute;
-import com.codecool.projectkifli.model.Product;
-import com.codecool.projectkifli.model.ProductAttribute;
-import com.codecool.projectkifli.model.User;
+import com.codecool.projectkifli.model.*;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -21,12 +18,16 @@ public class ProductDetailsDto {
     private Date uploadDate;
     private Date premiumExpirationDate;
     private List<Integer> pictureIds;
+    private Integer categoryId;
     private String categoryName;
     private Map<String, String> attributes;
     private Integer ownerId;
     private String ownerName;
     private String ownerEmail;
     private String ownerPhone;
+
+    public ProductDetailsDto() {
+    }
 
     public ProductDetailsDto(Product product) {
         this.id = product.getId();
@@ -38,7 +39,9 @@ public class ProductDetailsDto {
         this.uploadDate = product.getUploadDate();
         this.premiumExpirationDate = product.getPremiumExpirationDate();
         this.pictureIds = product.getPictureIds();
-        this.categoryName = product.getCategory().getName();
+        Category category = product.getCategory();
+        this.categoryId = category.getId();
+        this.categoryName = category.getName();
 
         this.attributes = setupAttributes(product);
 
@@ -74,59 +77,127 @@ public class ProductDetailsDto {
         return id;
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public String getTitle() {
         return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDescription() {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public Float getPrice() {
         return price;
+    }
+
+    public void setPrice(Float price) {
+        this.price = price;
     }
 
     public String getType() {
         return type;
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public String getState() {
         return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     public Date getUploadDate() {
         return uploadDate;
     }
 
+    public void setUploadDate(Date uploadDate) {
+        this.uploadDate = uploadDate;
+    }
+
     public Date getPremiumExpirationDate() {
         return premiumExpirationDate;
+    }
+
+    public void setPremiumExpirationDate(Date premiumExpirationDate) {
+        this.premiumExpirationDate = premiumExpirationDate;
     }
 
     public List<Integer> getPictureIds() {
         return pictureIds;
     }
 
+    public void setPictureIds(List<Integer> pictureIds) {
+        this.pictureIds = pictureIds;
+    }
+
+    public Integer getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
+    }
+
     public String getCategoryName() {
         return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public Map<String, String> getAttributes() {
         return attributes;
     }
 
+    public void setAttributes(Map<String, String> attributes) {
+        this.attributes = attributes;
+    }
+
     public Integer getOwnerId() {
         return ownerId;
+    }
+
+    public void setOwnerId(Integer ownerId) {
+        this.ownerId = ownerId;
     }
 
     public String getOwnerName() {
         return ownerName;
     }
 
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
+    }
+
     public String getOwnerEmail() {
         return ownerEmail;
     }
 
+    public void setOwnerEmail(String ownerEmail) {
+        this.ownerEmail = ownerEmail;
+    }
+
     public String getOwnerPhone() {
         return ownerPhone;
+    }
+
+    public void setOwnerPhone(String ownerPhone) {
+        this.ownerPhone = ownerPhone;
     }
 }

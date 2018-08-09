@@ -32,7 +32,7 @@ public class Product implements Serializable {
     @JoinColumn(name = "categoryId")
     private Category category;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "productId")
     private List<ProductAttribute> attributes;
 
@@ -136,7 +136,6 @@ public class Product implements Serializable {
     }
 
     public void setOwner(User owner) {
-        System.out.println("setting owner: " + owner);
         this.owner = owner;
     }
 

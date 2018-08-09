@@ -51,7 +51,8 @@ public class ProductController {
 
     @PostMapping(
             value = "",
-            consumes = MediaType.APPLICATION_JSON_VALUE
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ProductDetailsDto postAd(@RequestBody ProductPostData data, Principal principal) throws ParseException {
         if (principal == null) {
@@ -86,6 +87,19 @@ public class ProductController {
     public ProductListDto getUserProducts(@PathVariable("id") Integer userId) {
         logger.trace("Get products of user {}", userId);
         return productService.getUserProducts(userId);
+    }
+
+    @PutMapping(
+            value = "",
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    public void updateProduct(@RequestBody ProductDetailsDto dto, Principal principal) {
+        if (principal == null) {
+            logger.warn("User trying to update product {} is not logged in", dto.getId());
+            return;
+        }
+        logger.trace("Put product {} by user {}", dto.getId(), principal.getName());
+        productService.update(dto, principal.getName());
     }
 
 }
