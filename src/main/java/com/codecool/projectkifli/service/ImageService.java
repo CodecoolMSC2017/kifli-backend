@@ -6,10 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.List;
 
 @Service
 public class ImageService {
@@ -40,6 +42,22 @@ public class ImageService {
         }
     }
 
+    @Transactional(rollbackFor = IOException.class)
+    public void insert(byte[] data, Integer productId) throws IOException {
+        List<ProductPicture> pictures = imageRepository.findAllByProductId(productId);
+        if (pictures.size() > 7) {
+            logger.debug("Product {} already has 8 pictures", productId);
+            return;
+        }
+        ProductPicture productPicture = new ProductPicture();
+        productPicture.setProductId(productId);
+
+        ProductPicture save = imageRepository.save(productPicture);
+        logger.debug("Inserted picture {} for product {} into database", save.getId(), save.getProductId());
+
+        saveFile(save.getId(), productId, data);
+    }
+
     private File getExistingFile(String path) {
         File file = new File(path + ".jpg");
         if (!file.exists()) {
@@ -54,26 +72,12 @@ public class ImageService {
         return file;
     }
 
-    public void insert(byte[] data, Integer productId) {
-        ProductPicture productPicture = new ProductPicture();
-        productPicture.setProductId(productId);
-
-        ProductPicture save = imageRepository.save(productPicture);
-        logger.debug("Inserted picture {} for product {} into database", save.getId(), save.getProductId());
-
-        saveFile(save.getId(), productId, data);
-    }
-
-    private void saveFile(Integer id, Integer productId, byte[] data) {
+    private void saveFile(Integer id, Integer productId, byte[] data) throws IOException {
         String path = imagesDir + "/" + id + ".jpg";
         File file = new File(path);
         if (!file.exists()) {
-            try {
-                logger.trace("Creating file {}", path);
-                file.createNewFile();
-            } catch (IOException e) {
-                logger.error("Error creating file {}", path);
-            }
+            logger.trace("Creating file {}", path);
+            file.createNewFile();
         } else {
             logger.warn("File {} already exists", path);
         }
@@ -81,10 +85,6 @@ public class ImageService {
             logger.debug("Saving file {}", path);
             fileOutputStream.write(data);
             logger.info("Saved image {} for product {}", id, productId);
-        } catch (FileNotFoundException e) {
-            logger.error("File {} does not exist", path);
-        } catch (IOException e) {
-            logger.error("Error creating file {}", path);
         }
     }
 }
