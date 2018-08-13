@@ -31,6 +31,10 @@ public class AuthController {
             logger.error("Did not find user {}", principal.getName());
             return null;
         }
+        if(!user.getEnabled()) {
+            logger.error(principal.getName() + " is not verified yet");
+            return null;
+        }
         logger.info("User {} has logged in successfully", user.getUsername());
         return new UserCredentialsDto(user);
     }

@@ -65,6 +65,7 @@ public class UserService {
         user.setEmail(email);
         user.setFirstName(firstName);
         user.setLastName(lastName);
+        user.setEnabled(false);
         return user;
     }
 

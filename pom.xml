@@ -49,6 +49,10 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+        <dependency>
             <!--
                 Needed for using JPA/Hibernate with Java 8+ as
                 newer JDKs don't contain required runtime classes.

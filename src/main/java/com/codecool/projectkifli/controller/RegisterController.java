@@ -1,7 +1,9 @@
 package com.codecool.projectkifli.controller;
 
+import com.codecool.projectkifli.service.EmailService;
 import com.codecool.projectkifli.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -10,7 +12,13 @@ import java.util.Map;
 public class RegisterController {
 
     @Autowired
+    ApplicationEventPublisher eventPublisher;
+
+    @Autowired
     private UserService userService;
+
+    @Autowired
+    private EmailService emailService;
 
     @PostMapping("/register")
     public void register(@RequestBody Map<String, String> map) {
@@ -21,5 +29,6 @@ public class RegisterController {
         String firstName = map.get("firstName");
         String lastName = map.get("lastName");
         userService.add(username, email, password, confirmPassword, firstName, lastName);
+        //emailService.simpleMessage(email, username);
     }
 }
