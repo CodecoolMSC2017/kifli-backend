@@ -8,12 +8,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +25,8 @@ import java.util.Optional;
 public class UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
+    Principal principal = SecurityContextHolder.getContext().getAuthentication();
+
 
     @Autowired
     private UserRepository userRepository;
@@ -83,11 +88,21 @@ public class UserService {
     }
 
     public void changePassword(String oldPassword, String newPassword, String confirmationPassword) {
-        if (!newPassword.equals(confirmationPassword)) {
+        String oldPasswordFromPrincipal = getOldPassword(principal);
+        if (!newPassword.equals(confirmationPassword)|| !oldPasswordFromPrincipal.equals(oldPassword)) {
             throw new IllegalArgumentException();
         }
 
         String encodedNewPassword = passwordEncoder.encode(newPassword);
         userDetailsManager.changePassword(oldPassword, encodedNewPassword);
+    }
+
+    protected String getOldPassword(Principal principal) {
+
+        String username = principal.getName();
+        Optional<User> actualOptionalUser = userRepository.findByUsername(username);
+        User actualUser = actualOptionalUser.get();
+        String password = actualUser.getPassword();
+        return password;
     }
 }
