@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/images")
 public class ImageController {
@@ -31,7 +33,11 @@ public class ImageController {
     )
     public void saveImage(@RequestBody byte[] data, @RequestHeader("productId") Integer productId) {
         logger.trace("Post for product {}", productId);
-        imageService.insert(data, productId);
+        try {
+            imageService.insert(data, productId);
+        } catch (IOException e) {
+            logger.error("Could not save file", e);
+        }
     }
 
 }

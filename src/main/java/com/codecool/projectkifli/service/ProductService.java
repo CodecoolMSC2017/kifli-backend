@@ -101,7 +101,7 @@ public class ProductService {
         return dto;
     }
 
-    public ProductDetailsDto add(ProductPostData data, Principal principal) throws ParseException {
+    public ProductDetailsDto add(ProductPostData data, Principal principal) {
         User user = userRepository.findByUsername(principal.getName()).orElse(null);
         if (user == null) {
             logger.error("Did not find user {}", principal.getName());
@@ -113,8 +113,9 @@ public class ProductService {
             return null;
         }
         Product product = new Product();
-        setBasicAttributes(data, product);
-
+        if (!setAttributesOfProduct(data, product)) {
+            return null;
+        }
         product.setOwner(user);
         List<ProductAttribute> productAttributes = setupProductAttributes(data.getAttributes(), null, category);
         product.setAttributes(productAttributes);
@@ -137,7 +138,9 @@ public class ProductService {
             logger.warn("User {} is not allowed update product of user {}", username, product.getOwner().getUsername());
             return;
         }
-        updateBasicProductAttributes(product, dto);
+        if (!updateBasicProductAttributes(product, dto)) {
+            return;
+        }
         if (product.getCategory().getId().equals(dto.getCategoryId())) {
             logger.trace("Category unchanged");
             updateCategoryAttributes(dto, product);
@@ -150,16 +153,23 @@ public class ProductService {
         logger.info("Updated product {}", product.getId());
     }
 
-    private void setBasicAttributes(ProductPostData data, Product product) throws ParseException {
+    private boolean setAttributesOfProduct(ProductPostData data, Product product) {
         logger.trace("Setting basic attributes");
-        product.setTitle(data.getTitle());
-        product.setDescription(data.getDescription());
-        product.setPrice(data.getPrice());
-        product.setType(data.getType());
+
+        if (!setBasicAttributesOfProduct(product, data.getTitle(), data.getDescription(), data.getPrice(), data.getType())) {
+            return false;
+        }
+
         product.setState("FOR SALE");
         String formattedDate = simpleDateFormat.format(new Date());
-        product.setUploadDate(simpleDateFormat.parse(formattedDate));
-        product.setPremiumExpirationDate(simpleDateFormat.parse("2020/12/02"));
+        try {
+            product.setUploadDate(simpleDateFormat.parse(formattedDate));
+            product.setPremiumExpirationDate(simpleDateFormat.parse("2020/12/02"));
+        } catch (ParseException e) {
+            logger.error("ParseException at parsing date");
+            return false;
+        }
+        return true;
     }
 
     private void setupNewCategory(Product product, ProductDetailsDto dto) {
@@ -201,12 +211,36 @@ public class ProductService {
         productAttributeRepository.flush();
     }
 
-    private void updateBasicProductAttributes(Product product, ProductDetailsDto dto) {
+    private boolean updateBasicProductAttributes(Product product, ProductDetailsDto dto) {
         logger.trace("Updating basic attributes");
-        product.setTitle(dto.getTitle());
-        product.setDescription(dto.getDescription());
-        product.setPrice(dto.getPrice());
-        product.setType(dto.getType());
+         return setBasicAttributesOfProduct(product, dto.getTitle(), dto.getDescription(), dto.getPrice(), dto.getType());
+    }
+
+    private boolean setBasicAttributesOfProduct(Product product, String title, String description, Float price, String type) {
+        if (title == null || title.equals("")) {
+            logger.error("Title can't be empty!");
+            return false;
+        }
+        product.setTitle(title);
+
+        if (description == null || description.equals("")) {
+            logger.error("Description can't be empty!");
+            return false;
+        }
+        product.setDescription(description);
+
+        if (price == null || price < 0.1) {
+            logger.error("Price can't be empty or less than 0.1!");
+            return false;
+        }
+        product.setPrice(price);
+
+        if (type == null || type.equals("")) {
+            logger.error("Type can't be empty!");
+            return false;
+        }
+        product.setType(type);
+        return true;
     }
 
     private List<ProductAttribute> setupProductAttributes(Map<String, String> attributes, Integer productId, Category category) {
