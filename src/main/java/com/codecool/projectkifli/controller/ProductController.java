@@ -40,12 +40,11 @@ public class ProductController {
 
     @DeleteMapping(value = "/{id}")
     public void delete(@PathVariable("id") Integer id, Principal principal) {
-        logger.trace("Delete product {}", id);
         if (principal == null) {
             logger.error("Anonymous user trying to delete product {}", id);
             throw new AccessDeniedException("Can't delete product without login");
         }
-        logger.info("Delete product {} by user {}", id, principal.getName());
+        logger.trace("Delete product {} by user {}", id, principal.getName());
         productService.delete(id, principal);
     }
 

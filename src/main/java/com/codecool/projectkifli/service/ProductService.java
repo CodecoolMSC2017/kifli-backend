@@ -141,13 +141,7 @@ public class ProductService {
         if (!updateBasicProductAttributes(product, dto)) {
             return;
         }
-        if (product.getCategory().getId().equals(dto.getCategoryId())) {
-            logger.trace("Category unchanged");
-            updateCategoryAttributes(dto, product);
-        } else {
-            logger.trace("Category changed");
-            setupNewCategory(product, dto);
-        }
+        updateCategoryAttributes(dto, product);
         logger.trace("Saving changes of product {}", product.getId());
         productRepository.save(product);
         logger.info("Updated product {}", product.getId());
@@ -188,20 +182,31 @@ public class ProductService {
     private void updateCategoryAttributes(ProductDetailsDto dto, Product product) {
         Map<String, String> dtoAttributes = dto.getAttributes();
         logger.trace("Updating attributes to {}", dtoAttributes);
-        for (ProductAttribute attribute : product.getAttributes()) {
-            CategoryAttribute categoryAttribute = categoryAttributeRepository.findById(attribute.getAttributeId()).orElse(null);
-            if (categoryAttribute == null) {
-                logger.error("Did not find categoryAttribute {}", attribute.getId());
-                return;
-            }
+        for (CategoryAttribute categoryAttribute : product.getCategory().getAttributes()) {
             String newValue = dtoAttributes.get(categoryAttribute.getName());
             if (newValue == null) {
                 logger.warn("Value of attribute '{}' from client is null, skipping update of this attribute", categoryAttribute.getName());
                 continue;
             }
-            attribute.setValue(newValue);
-            productAttributeRepository.save(attribute);
+            ProductAttribute productAttribute = getProductAttributeById(product.getAttributes(), categoryAttribute.getId());
+            if (productAttribute == null) {
+                logger.warn("Attribute '{}' is missing from product, inserting", categoryAttribute.getName());
+                productAttribute = new ProductAttribute();
+                productAttribute.setProductId(product.getId());
+                productAttribute.setAttributeId(categoryAttribute.getId());
+            }
+            productAttribute.setValue(newValue);
+            productAttributeRepository.save(productAttribute);
         }
+    }
+
+    private ProductAttribute getProductAttributeById(List<ProductAttribute> attributes, Integer attributeId) {
+        for (ProductAttribute attribute : attributes) {
+            if (attribute.getAttributeId().equals(attributeId)) {
+                return attribute;
+            }
+        }
+        return null;
     }
 
     @Transactional
