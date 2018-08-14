@@ -25,7 +25,7 @@ import java.util.Optional;
 public class UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
-    Principal principal = SecurityContextHolder.getContext().getAuthentication();
+    //Principal principal = SecurityContextHolder.getContext().getAuthentication();
 
 
     @Autowired
@@ -88,9 +88,8 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public void changePassword(String oldPassword, String newPassword, String confirmationPassword) {
-        String oldPasswordFromPrincipal = getOldPassword(principal);
-        if (!newPassword.equals(confirmationPassword)|| !oldPasswordFromPrincipal.equals(oldPassword)) {
+    public void changePassword(Principal principal, String oldPassword, String newPassword, String confirmationPassword) {
+        if (!newPassword.equals(confirmationPassword)|| !passwordEncoder.matches(oldPassword, getOldPassword(principal))) {
             throw new IllegalArgumentException();
         }
 
@@ -101,6 +100,7 @@ public class UserService {
     protected String getOldPassword(Principal principal) {
 
         String username = principal.getName();
+        System.out.println(username);
         Optional<User> actualOptionalUser = userRepository.findByUsername(username);
         User actualUser = actualOptionalUser.get();
         String password = actualUser.getPassword();

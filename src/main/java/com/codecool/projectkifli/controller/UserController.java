@@ -47,12 +47,12 @@ public class UserController {
     }
 
     @PostMapping("/change-password")
-    public void changePassword(@RequestBody Map<String, String> map) {
+    public void changePassword(@RequestBody Map<String, String> map, Principal principal) {
         String oldPassword = map.get("oldPassword");
         String newPassword = map.get("newPassword");
         String confirmationPassword = map.get("confirmationPassword");
-        System.out.println(oldPassword+ newPassword+ confirmationPassword);
-        userService.changePassword(oldPassword, newPassword, confirmationPassword);
+        userService.changePassword(principal ,oldPassword, newPassword, confirmationPassword);
+
     }
 
     @DeleteMapping("/{id}")
