@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
@@ -31,9 +32,14 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public UserCredentialsDto get(@PathVariable("id") Integer id) {
+    public UserCredentialsDto get(@PathVariable("id") Integer id, HttpServletResponse response) {
         logger.trace("Get user {}", id);
-        return userService.get(id);
+        UserCredentialsDto user = userService.get(id);
+        if (user == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return null;
+        }
+        return user;
     }
 
     @PostMapping("")
