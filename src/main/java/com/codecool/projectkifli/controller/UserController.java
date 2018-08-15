@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,13 +47,16 @@ public class UserController {
         return userService.add(username, email, password, confirmPassword, firstName, lastName);
     }
 
-    @PostMapping("/change-password")
-    public void changePassword(@RequestBody Map<String, String> map, Principal principal) {
+    @PostMapping(value= "/change-password",
+                produces = MediaType.APPLICATION_JSON_VALUE)
+    public HashMap<String, String> changePassword(@RequestBody Map<String, String> map, Principal principal) {
         String oldPassword = map.get("oldPassword");
         String newPassword = map.get("newPassword");
         String confirmationPassword = map.get("confirmationPassword");
         userService.changePassword(principal ,oldPassword, newPassword, confirmationPassword);
-
+        HashMap<String, String> response = new HashMap<>();
+        response.put("message", "You changed your password");
+        return response;
     }
 
     @DeleteMapping("/{id}")
