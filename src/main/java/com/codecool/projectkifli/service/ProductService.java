@@ -22,7 +22,7 @@ import java.util.Map;
 @Service
 public class ProductService {
 
-    public static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
 
     private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
 
@@ -117,7 +117,7 @@ public class ProductService {
             return null;
         }
         product.setOwner(user);
-        List<ProductAttribute> productAttributes = setupProductAttributes(data.getAttributes(), null, category);
+        List<ProductAttribute> productAttributes = setupProductAttributes(data.getAttributes(), category);
         product.setAttributes(productAttributes);
         product.setCategory(category);
 
@@ -166,19 +166,6 @@ public class ProductService {
         return true;
     }
 
-    private void setupNewCategory(Product product, ProductDetailsDto dto) {
-        logger.trace("Setting up new category");
-        Category category = categoryRespository.findById(dto.getCategoryId()).orElse(null);
-        if (category == null) {
-            logger.error("Did not find category {}", dto.getCategoryId());
-            return;
-        }
-        removeCurrentAttributes(product);
-        List<ProductAttribute> attributes = setupProductAttributes(dto.getAttributes(), product.getId(), category);
-        product.setCategory(category);
-        product.setAttributes(attributes);
-    }
-
     private void updateCategoryAttributes(ProductDetailsDto dto, Product product) {
         Map<String, String> dtoAttributes = dto.getAttributes();
         logger.trace("Updating attributes to {}", dtoAttributes);
@@ -207,13 +194,6 @@ public class ProductService {
             }
         }
         return null;
-    }
-
-    @Transactional
-    private void removeCurrentAttributes(Product product) {
-        logger.trace("Deleting current attributes");
-        productAttributeRepository.deleteAllByProductId(product.getId());
-        productAttributeRepository.flush();
     }
 
     private boolean updateBasicProductAttributes(Product product, ProductDetailsDto dto) {
@@ -248,14 +228,13 @@ public class ProductService {
         return true;
     }
 
-    private List<ProductAttribute> setupProductAttributes(Map<String, String> attributes, Integer productId, Category category) {
+    private List<ProductAttribute> setupProductAttributes(Map<String, String> attributes, Category category) {
         logger.trace("Setting up category attributes");
         List<ProductAttribute> productAttributes = new ArrayList<>();
 
         for (CategoryAttribute attribute : category.getAttributes()) {
             ProductAttribute productAttribute = new ProductAttribute();
             productAttribute.setAttributeId(attribute.getId());
-            productAttribute.setProductId(productId);
             String value = attributes.get(attribute.getName());
             if (value == null) {
                 logger.warn("Value of attribute '{}' from client is null, skipping inserting this attribute", attribute.getName());
