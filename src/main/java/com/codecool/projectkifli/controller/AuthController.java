@@ -6,13 +6,13 @@ import com.codecool.projectkifli.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.security.Principal;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -39,5 +39,10 @@ public class AuthController {
     public void delete(HttpSession session, Principal principal) {
         logger.info("User {} has logged out", principal.getName());
         session.invalidate();
+    }
+
+    @PostMapping("")
+    public User authenticateUserByToken(@RequestBody Map<String, String> map) throws GeneralSecurityException, IOException {
+        return userService.getUserByToken(map.get("idToken"));
     }
 }

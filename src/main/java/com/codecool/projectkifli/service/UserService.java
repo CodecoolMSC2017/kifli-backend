@@ -7,7 +7,11 @@ import com.codecool.projectkifli.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,13 +20,27 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
 
 @Service
 public class UserService {
+
+    HttpTransport transport = new NetHttpTransport();
+    JsonFactory jsonFactory = new JacksonFactory();
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     //Principal principal = SecurityContextHolder.getContext().getAuthentication();
@@ -129,5 +147,71 @@ public class UserService {
         User save = userRepository.save(user);
         logger.info("Updated profile of user {}", username);
         return new UserCredentialsDto(save);
+    }
+
+    private boolean isEmailExists(String email) {
+        User user = userRepository.findByEmail(email);
+
+        if (user == null) {
+            return false;
+        }
+        return true;
+    }
+
+    public User getUserByEmail(String email) {
+        User user = userRepository.findByEmail(email);
+
+        if (user == null) {
+            logger.error("Did not find user {}", email);
+            return null;
+        }
+
+        return user;
+    }
+
+    public User getGoogleAuthenticatedUser(String email) {
+        if (!isEmailExists(email)) {
+            userDetailsManager.createUser(new org.springframework.security.core.userdetails.User(
+                    email, "", AuthorityUtils.createAuthorityList("USER_ROLE")
+            ));
+        }
+        return getUserByEmail(email);
+    }
+
+    public User getUserByToken(String idToken) throws GeneralSecurityException, IOException {
+
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
+                .setAudience(Collections.singletonList("222157294364-s0r226g6ue92bp6n78iaqcthjbohi3pp.apps.googleusercontent.com")).build();
+
+        GoogleIdToken token = verifier.verify(idToken);
+
+        if (token != null) {
+            GoogleIdToken.Payload payload = token.getPayload();
+            String userId = payload.getSubject();
+
+            String email = payload.getEmail();
+            boolean emailcerified = Boolean.valueOf(payload.getEmailVerified());
+            String name = (String) payload.get("name");
+            String pictureUrl = (String) payload.get("picture");
+            String locale = (String) payload.get("locale");
+            String familyName = (String) payload.get("family_name");
+            String givenName = (String) payload.get("given_name");
+
+            User user = getGoogleAuthenticatedUser(email);
+
+            List<GrantedAuthority> roles = user.getAuthorities()
+                    .stream()
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
+
+            Authentication auth = new UsernamePasswordAuthenticationToken(user.getEmail(), null, roles);
+
+            SecurityContextHolder.getContext().setAuthentication(auth);
+
+            return user;
+        } else {
+            System.out.println("Invalid Id token");
+            return null;
+        }
     }
 }
