@@ -53,16 +53,23 @@ public class UserController {
         return userService.add(username, email, password, confirmPassword, firstName, lastName);
     }
 
-    @PostMapping(value= "/change-password",
-                produces = MediaType.APPLICATION_JSON_VALUE)
-    public HashMap<String, String> changePassword(@RequestBody Map<String, String> map, Principal principal) {
+    @PostMapping(
+            value = "/change-password",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public void changePassword(@RequestBody Map<String, String> map, Principal principal, HttpServletResponse response) {
+        logger.trace("Change password of user {}", principal.getName());
         String oldPassword = map.get("oldPassword");
         String newPassword = map.get("newPassword");
         String confirmationPassword = map.get("confirmationPassword");
-        userService.changePassword(principal ,oldPassword, newPassword, confirmationPassword);
-        HashMap<String, String> response = new HashMap<>();
-        response.put("message", "You changed your password");
-        return response;
+        try {
+            userService.changePassword(principal.getName(), oldPassword, newPassword, confirmationPassword);
+        } catch (IllegalArgumentException ex) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        } catch (NullPointerException ex) {
+            logger.warn("NullPointerException caught");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -87,5 +94,20 @@ public class UserController {
         }
         logger.trace("Creating and returning dto");
         return new UserCredentialsDto(user);
+    }
+
+    @PutMapping(
+            value = "",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public UserCredentialsDto updateUser(@RequestBody UserCredentialsDto user, Principal principal, HttpServletResponse response) {
+        logger.trace("Put by {}", principal.getName());
+        UserCredentialsDto dto = userService.updateUser(user, principal.getName());
+        if (dto == null) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            return null;
+        }
+        return dto;
     }
 }

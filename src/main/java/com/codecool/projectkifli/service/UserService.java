@@ -75,7 +75,7 @@ public class UserService {
 
     public UserCredentialsDto get(Integer id) {
         logger.debug("Finding user {}", id);
-        User user =  userRepository.findById(id).orElse(null);
+        User user = userRepository.findById(id).orElse(null);
         if (user == null) {
             logger.error("Did not find user {}", id);
             return null;
@@ -87,22 +87,47 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public void changePassword(Principal principal, String oldPassword, String newPassword, String confirmationPassword) {
-        if (!newPassword.equals(confirmationPassword)|| !passwordEncoder.matches(oldPassword, getOldPassword(principal))) {
+    public void changePassword(String username, String oldPassword, String newPassword, String confirmationPassword) {
+        logger.debug("Changing password of user {}", username);
+        if (!passwordEncoder.matches(oldPassword, getOldPassword(username))) {
+            logger.error("Old password is incorrect!");
             throw new IllegalArgumentException();
         }
-
+        if (!newPassword.equals(confirmationPassword)) {
+            logger.error("New password and confirmation password don't match!");
+            throw new IllegalArgumentException();
+        }
         String encodedNewPassword = passwordEncoder.encode(newPassword);
         userDetailsManager.changePassword(oldPassword, encodedNewPassword);
+        logger.info("Changed password of user {}", username);
     }
 
-    protected String getOldPassword(Principal principal) {
+    private String getOldPassword(String username) {
+        User user = userRepository.findByUsername(username).orElse(null);
+        if (user == null) {
+            logger.error("Did not find user {}", username);
+            return null;
+        }
+        return user.getPassword();
+    }
 
-        String username = principal.getName();
-        System.out.println(username);
-        Optional<User> actualOptionalUser = userRepository.findByUsername(username);
-        User actualUser = actualOptionalUser.get();
-        String password = actualUser.getPassword();
-        return password;
+    public UserCredentialsDto updateUser(UserCredentialsDto newUser, String username) {
+        User user = userRepository.findByUsername(username).orElse(null);
+        if (user == null) {
+            logger.error("Did not find user {}", username);
+            return null;
+        }
+        if (!newUser.getId().equals(user.getId())) {
+            logger.error("Id mismatch, users can only update their own profile");
+            return null;
+        }
+        user.setEmail(newUser.getEmail());
+        user.setFirstName(newUser.getFirstName());
+        user.setLastName(newUser.getLastName());
+        user.setCredentials(newUser.getCredentials());
+
+        User save = userRepository.save(user);
+        logger.info("Updated profile of user {}", username);
+        return new UserCredentialsDto(save);
     }
 }
