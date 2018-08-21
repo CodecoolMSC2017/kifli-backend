@@ -23,7 +23,6 @@ public class ImageController {
             produces = MediaType.IMAGE_JPEG_VALUE
     )
     public byte[] getImageById(@PathVariable("id") String id) {
-        logger.trace("Get image {}", id);
         return imageService.getById(id);
     }
 

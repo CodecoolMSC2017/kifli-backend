@@ -10,6 +10,9 @@ import javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,8 +25,8 @@ import java.util.*;
 public class ProductService {
 
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
-
     private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
+    private static final int NUMBER_OF_ITEMS_ON_PAGE = 10;
 
     @Autowired
     private CategoryRespository categoryRespository;
@@ -43,11 +46,12 @@ public class ProductService {
     @Autowired
     private CategoryService categoryService;
 
-    public ProductListDto findAll() {
+    public ProductListDto findAll(Integer page) {
         logger.debug("Finding all products");
         ProductListDto dto = new ProductListDto();
-        dto.setCategories(categoryRespository.findAll());
         dto.setProducts(productListItemRepository.findAll());
+        dto.setCategories(categoryRespository.findAll());
+        filterByPage(dto, page);
         return dto;
     }
 
@@ -69,29 +73,67 @@ public class ProductService {
         throw new AccessDeniedException("Not authorized to delete this ad");
     }
 
-    public ProductListDto getFilteredProducts(String searchString, Integer categoryId, Float minimumPrice, Float maximumPrice) {
-        logger.debug("Filtering products: searchString={}, categoryId={}, minPrice={}, maxPrice={}", searchString, categoryId, minimumPrice, maximumPrice);
+    public ProductListDto getFilteredProducts(String searchString, Integer categoryId, Float minimumPrice, Float maximumPrice, Integer page) {
+        logger.debug("Filtering products: searchString={}, categoryId={}, minPrice={}, maxPrice={}, page={}",
+                searchString, categoryId, minimumPrice, maximumPrice, page);
+        ProductListDto dto = new ProductListDto();
+        dto.setProducts(filterBySearchAndCategory(searchString, categoryId));
+        dto.setCategories(categoryRespository.findAll());
+        filterByPrice(dto, minimumPrice, maximumPrice);
+        filterByPage(dto, page);
+        return dto;
+    }
+
+    private void filterByPage(ProductListDto dto, Integer page) {
+        if (page == null) {
+            logger.trace("No page parameter given");
+            page = 1;
+        }
+        if (page < 1) {
+            logger.warn("Page parameter is less than 1");
+            page = 1;
+        }
+        logger.debug("Filtering page {}", page);
+        List<ProductListItem> products = dto.getProducts();
+        int productsSize = products.size();
+        int start = NUMBER_OF_ITEMS_ON_PAGE * (page - 1);
+        try {
+            dto.setProducts(products.subList(start, start + NUMBER_OF_ITEMS_ON_PAGE));
+        } catch (IndexOutOfBoundsException e) {
+            logger.debug("Item overflow, getting last page");
+            start = productsSize / NUMBER_OF_ITEMS_ON_PAGE * NUMBER_OF_ITEMS_ON_PAGE;
+            dto.setProducts(products.subList(start, productsSize));
+            page = start / NUMBER_OF_ITEMS_ON_PAGE + 1;
+        }
+        dto.setPage(page);
+        int totalPages = productsSize / NUMBER_OF_ITEMS_ON_PAGE + 1;
+        dto.setTotalPages(totalPages);
+        logger.debug("Filtered to page {}/{}", page, totalPages);
+    }
+
+    private List<ProductListItem> filterBySearchAndCategory(String searchString, Integer categoryId) {
         if (searchString == null || searchString.equals("")) {
             if (categoryId == null || categoryId == 0) {
                 logger.trace("Finding all products");
-                return filterByPrice(productListItemRepository.findAll(), minimumPrice, maximumPrice);
+                return productListItemRepository.findAll();
             }
             logger.trace("Filtering by category {}", categoryId);
-            return filterByPrice(productListItemRepository.findByCategoryId(categoryId), minimumPrice, maximumPrice);
+            return productListItemRepository.findByCategoryId(categoryId);
         }
         if (categoryId == null || categoryId == 0) {
             logger.trace("Filtering by searchString '{}'", searchString);
-            return filterByPrice(productListItemRepository.findBySearchTitleString(searchString), minimumPrice, maximumPrice);
+            return productListItemRepository.findBySearchTitleString(searchString);
         }
         logger.trace("Filtering by searchString '{}' and category {}", searchString, categoryId);
-        return filterByPrice(productListItemRepository.findBySearchTitleStringAndCategoryId(searchString, categoryId), minimumPrice, maximumPrice);
+        return productListItemRepository.findBySearchTitleStringAndCategoryId(searchString, categoryId);
     }
 
-    public ProductListDto getUserProducts(Integer userId) {
+    public ProductListDto getUserProducts(Integer userId, Integer page) {
         logger.debug("Getting products of user {}", userId);
         ProductListDto dto = new ProductListDto();
         dto.setCategories(categoryRespository.findAll());
         dto.setProducts(productListItemRepository.findAllByUserId(userId));
+        filterByPage(dto, page);
         return dto;
     }
 
@@ -207,13 +249,10 @@ public class ProductService {
         return productAttributes;
     }
 
-    private ProductListDto filterByPrice(List<ProductListItem> products, Float minimum, Float maximum) {
-        ProductListDto dto = new ProductListDto();
-        dto.setCategories(categoryRespository.findAll());
+    private void filterByPrice(ProductListDto dto, Float minimum, Float maximum) {
         if (minimum == null && maximum == null) {
             logger.trace("No price filtering parameter given, skipping");
-            dto.setProducts(products);
-            return dto;
+            return;
         }
         if (minimum == null) {
             minimum = (float) 0;
@@ -223,14 +262,13 @@ public class ProductService {
         }
         logger.trace("Filtering price between {} and {}", minimum, maximum);
         List<ProductListItem> filteredList = new ArrayList<>();
-        for (ProductListItem product : products) {
+        for (ProductListItem product : dto.getProducts()) {
             float price = product.getPrice();
             if (price >= minimum && price <= maximum) {
                 filteredList.add(product);
             }
         }
         dto.setProducts(filteredList);
-        return dto;
     }
 
     Product get(Integer id) throws NotFoundException {

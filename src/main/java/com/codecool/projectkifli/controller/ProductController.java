@@ -101,22 +101,23 @@ public class ProductController {
             @Nullable @RequestParam("search") String searchString,
             @Nullable @RequestParam("categoryId") Integer categoryId,
             @Nullable @RequestParam("minimumPrice") Float minimumPrice,
-            @Nullable @RequestParam("maximumPrice") Float maximumPrice
+            @Nullable @RequestParam("maximumPrice") Float maximumPrice,
+            @Nullable @RequestParam("page") Integer page
     ) {
         logger.trace("Get products");
         if (searchString == null && categoryId == null && minimumPrice == null && maximumPrice == null) {
-            return productService.findAll();
+            return productService.findAll(page);
         }
-        return productService.getFilteredProducts(searchString, categoryId, minimumPrice, maximumPrice);
+        return productService.getFilteredProducts(searchString, categoryId, minimumPrice, maximumPrice, page);
     }
 
     @GetMapping(
             value = "user/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ProductListDto getUserProducts(@PathVariable("id") Integer userId) {
+    public ProductListDto getUserProducts(@PathVariable("id") Integer userId, @Nullable @RequestParam("page") Integer page) {
         logger.trace("Get products of user {}", userId);
-        return productService.getUserProducts(userId);
+        return productService.getUserProducts(userId, page);
     }
 
     @PutMapping(
