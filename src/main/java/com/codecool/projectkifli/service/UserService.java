@@ -2,8 +2,11 @@ package com.codecool.projectkifli.service;
 
 import com.codecool.projectkifli.dto.UserCredentialsDto;
 import com.codecool.projectkifli.dto.UserDto;
+import com.codecool.projectkifli.exception.ForbiddenException;
+import com.codecool.projectkifli.exception.InvalidInputException;
 import com.codecool.projectkifli.model.User;
 import com.codecool.projectkifli.repository.UserRepository;
+import javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,80 +67,84 @@ public class UserService {
         return userDtos;
     }
 
-    public User get(String username) {
-        logger.debug("Finding user {}", username);
-        return userRepository.findByUsername(username).orElse(null);
+    public UserCredentialsDto get(Integer id) throws NotFoundException {
+        logger.debug("Finding user {} by id", id);
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
+        return new UserCredentialsDto(user);
+    }
+
+    public User get(String username) throws NotFoundException {
+        logger.debug("Finding user {} by username", username);
+        return userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("User not found!"));
     }
 
     @Transactional
-    public User add(String username, String email, String password, String confirmPassword, String firstName, String lastName) {
-        if (!password.equals(confirmPassword) ||
-                username.equals(null) || username == "" ||
-                email.equals(null) || email == "" ||
-                password.equals(null) || password == "" ||
-                confirmPassword.equals(null) || confirmPassword == "" ||
-                firstName.equals(null) || firstName == "" ||
-                lastName.equals(null) || lastName == "") {
-            throw new IllegalArgumentException();
+    public User add(
+            String username,
+            String email,
+            String password,
+            String confirmPassword,
+            String firstName,
+            String lastName) throws InvalidInputException, NotFoundException {
+        if (username == null || username.equals("")) {
+            throw new InvalidInputException("Username can't be empty!");
+        }
+        if (email == null || email.equals("")) {
+            throw new InvalidInputException("Email can't be empty!");
+        }
+        if (password == null || password.equals("")) {
+            throw new InvalidInputException("Password can't be empty!");
+        }
+        if (confirmPassword == null || confirmPassword.equals("")) {
+            throw new InvalidInputException("Confirmation password can't be empty!");
+        }
+        if (firstName == null || firstName.equals("")) {
+            throw new InvalidInputException("First name can't be empty!");
+        }
+        if (lastName == null || lastName.equals("")) {
+            throw new InvalidInputException("Last name can't be empty!");
+        }
+        if (!password.equals(confirmPassword)) {
+            throw new InvalidInputException("Password and confirmation password do not match!");
         }
         userDetailsManager.createUser(new org.springframework.security.core.userdetails.User(
                 username,
                 passwordEncoder.encode(password),
                 AuthorityUtils.createAuthorityList("USER_ROLE")));
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(""));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("User not found!"));
         user.setEmail(email);
         user.setFirstName(firstName);
         user.setLastName(lastName);
         return user;
     }
 
-    public UserCredentialsDto get(Integer id) {
-        logger.debug("Finding user {}", id);
-        User user = userRepository.findById(id).orElse(null);
-        if (user == null) {
-            logger.error("Did not find user {}", id);
-            return null;
-        }
-        return new UserCredentialsDto(user);
-    }
-
     public void delete(Integer id) {
+        logger.debug("Deleting user {}", id);
         userRepository.deleteById(id);
     }
 
-    public void changePassword(String username, String oldPassword, String newPassword, String confirmationPassword) {
+    public void changePassword(String username, String oldPassword, String newPassword, String confirmationPassword) throws InvalidInputException, NotFoundException {
         logger.debug("Changing password of user {}", username);
         if (!passwordEncoder.matches(oldPassword, getOldPassword(username))) {
-            logger.error("Old password is incorrect!");
-            throw new IllegalArgumentException();
+            throw new InvalidInputException("Old password is incorrect!");
         }
         if (!newPassword.equals(confirmationPassword)) {
-            logger.error("New password and confirmation password don't match!");
-            throw new IllegalArgumentException();
+            throw new InvalidInputException("New password and confirmation password don't match!");
         }
         String encodedNewPassword = passwordEncoder.encode(newPassword);
         userDetailsManager.changePassword(oldPassword, encodedNewPassword);
         logger.info("Changed password of user {}", username);
     }
 
-    private String getOldPassword(String username) {
-        User user = userRepository.findByUsername(username).orElse(null);
-        if (user == null) {
-            logger.error("Did not find user {}", username);
-            return null;
-        }
+    private String getOldPassword(String username) throws NotFoundException {
+        User user = get(username);
         return user.getPassword();
     }
 
-    public UserCredentialsDto updateUser(UserCredentialsDto newUser, String username) {
-        User user = userRepository.findByUsername(username).orElse(null);
-        if (user == null) {
-            logger.error("Did not find user {}", username);
-            return null;
-        }
+    public UserCredentialsDto updateUser(UserCredentialsDto newUser, String username) throws NotFoundException, ForbiddenException {
+        User user = get(username);
         if (!newUser.getId().equals(user.getId())) {
-            logger.error("Id mismatch, users can only update their own profile");
-            return null;
+            throw new ForbiddenException("You can only update your own profile!");
         }
         user.setEmail(newUser.getEmail());
         user.setFirstName(newUser.getFirstName());
@@ -150,26 +157,15 @@ public class UserService {
     }
 
     private boolean isEmailExists(String email) {
-        User user = userRepository.findByEmail(email);
-
-        if (user == null) {
-            return false;
-        }
-        return true;
+        User user = userRepository.findByEmail(email).orElse(null);
+        return user != null;
     }
 
-    public User getUserByEmail(String email) {
-        User user = userRepository.findByEmail(email);
-
-        if (user == null) {
-            logger.error("Did not find user {}", email);
-            return null;
-        }
-
-        return user;
+    private User getUserByEmail(String email) throws NotFoundException {
+        return userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("User not found!"));
     }
 
-    public User getGoogleAuthenticatedUser(String email) {
+    private User getGoogleAuthenticatedUser(String email) throws NotFoundException {
         if (!isEmailExists(email)) {
             userDetailsManager.createUser(new org.springframework.security.core.userdetails.User(
                     email, "", AuthorityUtils.createAuthorityList("USER_ROLE")
@@ -178,40 +174,37 @@ public class UserService {
         return getUserByEmail(email);
     }
 
-    public User getUserByToken(String idToken) throws GeneralSecurityException, IOException {
-
+    public User getUserByToken(String idToken) throws GeneralSecurityException, IOException, NotFoundException {
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
                 .setAudience(Collections.singletonList("222157294364-s0r226g6ue92bp6n78iaqcthjbohi3pp.apps.googleusercontent.com")).build();
 
         GoogleIdToken token = verifier.verify(idToken);
-
-        if (token != null) {
-            GoogleIdToken.Payload payload = token.getPayload();
-            String userId = payload.getSubject();
-
-            String email = payload.getEmail();
-            boolean emailcerified = Boolean.valueOf(payload.getEmailVerified());
-            String name = (String) payload.get("name");
-            String pictureUrl = (String) payload.get("picture");
-            String locale = (String) payload.get("locale");
-            String familyName = (String) payload.get("family_name");
-            String givenName = (String) payload.get("given_name");
-
-            User user = getGoogleAuthenticatedUser(email);
-
-            List<GrantedAuthority> roles = user.getAuthorities()
-                    .stream()
-                    .map(SimpleGrantedAuthority::new)
-                    .collect(Collectors.toList());
-
-            Authentication auth = new UsernamePasswordAuthenticationToken(user.getEmail(), null, roles);
-
-            SecurityContextHolder.getContext().setAuthentication(auth);
-
-            return user;
-        } else {
-            System.out.println("Invalid Id token");
+        if (token == null) {
+            logger.error("Invalid token");
             return null;
         }
+        GoogleIdToken.Payload payload = token.getPayload();
+        String userId = payload.getSubject();
+
+        String email = payload.getEmail();
+        boolean emailcerified = payload.getEmailVerified();
+        String name = (String) payload.get("name");
+        String pictureUrl = (String) payload.get("picture");
+        String locale = (String) payload.get("locale");
+        String familyName = (String) payload.get("family_name");
+        String givenName = (String) payload.get("given_name");
+
+        User user = getGoogleAuthenticatedUser(email);
+
+        List<GrantedAuthority> roles = user.getAuthorities()
+                .stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+
+        Authentication auth = new UsernamePasswordAuthenticationToken(user.getEmail(), null, roles);
+
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        return user;
     }
 }

@@ -3,11 +3,13 @@ package com.codecool.projectkifli.controller;
 import com.codecool.projectkifli.dto.UserCredentialsDto;
 import com.codecool.projectkifli.model.User;
 import com.codecool.projectkifli.service.UserService;
+import javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -26,13 +28,14 @@ public class AuthController {
     @GetMapping("")
     public UserCredentialsDto get(Principal principal) {
         logger.trace("Get user {}", principal.getName());
-        User user = userService.get(principal.getName());
-        if (user == null) {
+        try {
+            User user = userService.get(principal.getName());
+            logger.info("User {} has logged in successfully", user.getUsername());
+            return new UserCredentialsDto(user);
+        } catch (NotFoundException e) {
             logger.error("Did not find user {}", principal.getName());
             return null;
         }
-        logger.info("User {} has logged in successfully", user.getUsername());
-        return new UserCredentialsDto(user);
     }
 
     @DeleteMapping("")
@@ -42,7 +45,16 @@ public class AuthController {
     }
 
     @PostMapping("")
-    public User authenticateUserByToken(@RequestBody Map<String, String> map) throws GeneralSecurityException, IOException {
-        return userService.getUserByToken(map.get("idToken"));
+    public User authenticateUserByToken(@RequestBody Map<String, String> map, HttpServletResponse response) {
+        try {
+            return userService.getUserByToken(map.get("idToken"));
+        } catch (GeneralSecurityException | IOException e) {
+            logger.error("Unable to authenticate user", e);
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        } catch (NotFoundException e) {
+            logger.error("Error: {}", e.getMessage());
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+        return null;
     }
 }

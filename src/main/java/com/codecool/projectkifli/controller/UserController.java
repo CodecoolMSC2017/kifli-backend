@@ -2,8 +2,11 @@ package com.codecool.projectkifli.controller;
 
 import com.codecool.projectkifli.dto.UserCredentialsDto;
 import com.codecool.projectkifli.dto.UserDto;
+import com.codecool.projectkifli.exception.ForbiddenException;
+import com.codecool.projectkifli.exception.InvalidInputException;
 import com.codecool.projectkifli.model.User;
 import com.codecool.projectkifli.service.UserService;
+import javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,23 +36,37 @@ public class UserController {
     @GetMapping("/{id}")
     public UserCredentialsDto get(@PathVariable("id") Integer id, HttpServletResponse response) {
         logger.trace("Get user {}", id);
-        UserCredentialsDto user = userService.get(id);
-        if (user == null) {
+        try {
+            return userService.get(id);
+        } catch (NotFoundException e) {
+            response.setHeader("errorMessage", e.getMessage());
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            logger.warn("User {} not found", id);
             return null;
         }
-        return user;
     }
 
     @PostMapping("")
-    public User add(@RequestBody Map<String, String> map) {
+    public User add(@RequestBody Map<String, String> map, HttpServletResponse response) {
         String username = map.get("username");
         String email = map.get("email");
         String password = map.get("password");
         String confirmPassword = map.get("confirmPassword");
         String firstName = map.get("firstName");
         String lastName = map.get("lastName");
-        return userService.add(username, email, password, confirmPassword, firstName, lastName);
+        try {
+            return userService.add(username, email, password, confirmPassword, firstName, lastName);
+        } catch (InvalidInputException e) {
+            response.setHeader("errorMessage", e.getMessage());
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.warn("Invalid input: {}", e.getMessage());
+            return null;
+        } catch (NotFoundException e) {
+            response.setHeader("errorMessage", e.getMessage());
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            logger.warn("Error adding new user: {}", e.getMessage());
+            return null;
+        }
     }
 
     @PostMapping(
@@ -64,16 +80,20 @@ public class UserController {
         String confirmationPassword = map.get("confirmationPassword");
         try {
             userService.changePassword(principal.getName(), oldPassword, newPassword, confirmationPassword);
-        } catch (IllegalArgumentException ex) {
+        } catch (InvalidInputException e) {
+            response.setHeader("errorMessage", e.getMessage());
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        } catch (NullPointerException ex) {
-            logger.warn("NullPointerException caught");
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.warn("Can't change password: {}", e.getMessage());
+        } catch (NotFoundException e) {
+            response.setHeader("errorMessage", e.getMessage());
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            logger.warn("Can't change password: {}", e.getMessage());
         }
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable("id") Integer id) {
+        logger.trace("Delete user {}", id);
         userService.delete(id);
     }
 
@@ -81,19 +101,21 @@ public class UserController {
             value = "/current",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public UserCredentialsDto getLoggedInUser(Principal principal) {
+    public UserCredentialsDto getLoggedInUser(Principal principal, HttpServletResponse response) {
         logger.trace("Get current user");
         if (principal == null) {
             logger.debug("Not logged in, returning null");
             return null;
         }
-        User user = userService.get(principal.getName());
-        if (user == null) {
-            logger.error("Did not find user {}", principal.getName());
+        try {
+            User user = userService.get(principal.getName());
+            return new UserCredentialsDto(user);
+        } catch (NotFoundException e) {
+            response.setHeader("errorMessage", e.getMessage());
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            logger.warn("User not found");
             return null;
         }
-        logger.trace("Creating and returning dto");
-        return new UserCredentialsDto(user);
     }
 
     @PutMapping(
@@ -103,11 +125,17 @@ public class UserController {
     )
     public UserCredentialsDto updateUser(@RequestBody UserCredentialsDto user, Principal principal, HttpServletResponse response) {
         logger.trace("Put by {}", principal.getName());
-        UserCredentialsDto dto = userService.updateUser(user, principal.getName());
-        if (dto == null) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return null;
+        try {
+            return userService.updateUser(user, principal.getName());
+        } catch (NotFoundException e) {
+            response.setHeader("errorMessage", e.getMessage());
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            logger.warn("Can't update user: {}", e.getMessage());
+        } catch (ForbiddenException e) {
+            response.setHeader("errorMessage", e.getMessage());
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            logger.warn("Can't update user: {}", e.getMessage());
         }
-        return dto;
+        return null;
     }
 }

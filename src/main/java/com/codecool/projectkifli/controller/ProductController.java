@@ -39,6 +39,7 @@ public class ProductController {
         } catch (NotFoundException e) {
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             resp.setHeader("errorMessage", e.getMessage());
+            logger.warn("Product {} not found", id);
             return null;
         }
     }
@@ -55,6 +56,7 @@ public class ProductController {
         } catch (NotFoundException e) {
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
             resp.setHeader("errorMessage", e.getMessage());
+            logger.warn("Can't delete product {}: {}", id, e.getMessage());
         }
     }
 

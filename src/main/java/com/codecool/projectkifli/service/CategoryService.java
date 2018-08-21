@@ -4,15 +4,13 @@ import com.codecool.projectkifli.model.Category;
 import com.codecool.projectkifli.model.CategoryAttribute;
 import com.codecool.projectkifli.model.CategoryPostData;
 import com.codecool.projectkifli.repository.CategoryRespository;
+import javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class CategoryService {
@@ -44,5 +42,9 @@ public class CategoryService {
             categoryAttributes.add(categoryAttribute);
         }
         return categoryAttributes;
+    }
+
+    Category get(Integer id) throws NotFoundException {
+        return categoryRespository.findById(id).orElseThrow(() -> new NotFoundException("Category not found!"));
     }
 }

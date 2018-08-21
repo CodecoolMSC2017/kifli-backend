@@ -38,6 +38,11 @@ public class ProductService {
     @Autowired
     private CategoryAttributeRepository categoryAttributeRepository;
 
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private CategoryService categoryService;
+
     public ProductListDto findAll() {
         logger.debug("Finding all products");
         ProductListDto dto = new ProductListDto();
@@ -48,13 +53,13 @@ public class ProductService {
 
     public ProductDetailsDto findById(Integer id) throws NotFoundException {
         logger.debug("Getting product {}", id);
-        Product product = getProductById(id);
+        Product product = get(id);
         return new ProductDetailsDto(product);
     }
 
     public void delete(Integer id, String username) throws NotFoundException {
-        User user = getUserByName(username);
-        Product product = getProductById(id);
+        User user = userService.get(username);
+        Product product = get(id);
         if (product.getOwner().getId().equals(user.getId()) || user.getAuthorities().contains("ROLE_ADMIN")) {
             logger.info("Deleting product {}", id);
             productRepository.deleteById(id);
@@ -91,8 +96,8 @@ public class ProductService {
     }
 
     public ProductDetailsDto add(ProductPostData data, String username) throws NotFoundException, InvalidInputException, ParseException {
-        User user = getUserByName(username);
-        Category category = getCategoryById(data.getCategoryId());
+        User user = userService.get(username);
+        Category category = categoryService.get(data.getCategoryId());
 
         Product product = new Product();
         setAttributesOfProduct(data, product);
@@ -109,7 +114,7 @@ public class ProductService {
 
     @Transactional
     public void update(ProductDetailsDto dto, String username) throws NotFoundException, ForbiddenException, InvalidInputException {
-        Product product = getProductById(dto.getId());
+        Product product = get(dto.getId());
         if (!product.getOwner().getUsername().equals(username)) {
             logger.warn("User {} is not allowed update product of user {}", username, product.getOwner().getUsername());
             throw new ForbiddenException("You are not allowed to edit this ad!");
@@ -228,30 +233,8 @@ public class ProductService {
         return dto;
     }
 
-    private User getUserByName(String username) throws NotFoundException {
-        Optional<User> user = userRepository.findByUsername(username);
-        if (user.isPresent()) {
-            return user.get();
-        }
-        logger.error("Did not find user {}", username);
-        throw new NotFoundException("User not found!");
+    Product get(Integer id) throws NotFoundException {
+        return productRepository.findById(id).orElseThrow(() -> new NotFoundException("Ad not found!"));
     }
 
-    private Product getProductById(Integer id) throws NotFoundException {
-        Optional<Product> product = productRepository.findById(id);
-        if (product.isPresent()) {
-            return product.get();
-        }
-        logger.error("Did not find product {}", id);
-        throw new NotFoundException("Ad not found!");
-    }
-
-    private Category getCategoryById(Integer id) throws NotFoundException {
-        Optional<Category> category = categoryRespository.findById(id);
-        if (category.isPresent()) {
-            return category.get();
-        }
-        logger.error("Did not find category {}", id);
-        throw new NotFoundException("Category not found!");
-    }
 }
