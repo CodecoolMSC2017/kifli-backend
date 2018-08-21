@@ -4,9 +4,11 @@ import com.codecool.projectkifli.model.CategoryAttribute;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface CategoryAttributeRepository extends JpaRepository<CategoryAttribute, Integer> {
 
-    CategoryAttribute findByName(String name);
+    Optional<CategoryAttribute> findByName(String name);
 
 }

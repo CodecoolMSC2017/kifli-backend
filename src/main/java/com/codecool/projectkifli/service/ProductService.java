@@ -2,8 +2,11 @@ package com.codecool.projectkifli.service;
 
 import com.codecool.projectkifli.dto.ProductDetailsDto;
 import com.codecool.projectkifli.dto.ProductListDto;
+import com.codecool.projectkifli.exception.ForbiddenException;
+import com.codecool.projectkifli.exception.InvalidInputException;
 import com.codecool.projectkifli.model.*;
 import com.codecool.projectkifli.repository.*;
+import javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,18 +14,14 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.security.Principal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ProductService {
 
-    public static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
 
     private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
 
@@ -39,41 +38,35 @@ public class ProductService {
     @Autowired
     private CategoryAttributeRepository categoryAttributeRepository;
 
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private CategoryService categoryService;
+
     public ProductListDto findAll() {
         logger.debug("Finding all products");
-        ProductListDto dto = new ProductListDto(categoryRespository.findAll());
+        ProductListDto dto = new ProductListDto();
+        dto.setCategories(categoryRespository.findAll());
         dto.setProducts(productListItemRepository.findAll());
         return dto;
     }
 
-    public ProductDetailsDto findById(Integer id) {
+    public ProductDetailsDto findById(Integer id) throws NotFoundException {
         logger.debug("Getting product {}", id);
-        Product product = productRepository.findById(id).orElse(null);
-        if (product == null) {
-            logger.error("Did not find product {}", id);
-            return null;
-        }
+        Product product = get(id);
         return new ProductDetailsDto(product);
     }
 
-    public void delete(Integer id, Principal principal) {
-        User user = userRepository.findByUsername(principal.getName()).orElse(null);
-        if (user == null) {
-            logger.error("Did not find user {} trying to delete product {}", principal.getName(), id);
-            return;
-        }
-        Product product = productRepository.findById(id).orElse(null);
-        if (product == null) {
-            logger.error("Did not find product {}", id);
-            return;
-        }
+    public void delete(Integer id, String username) throws NotFoundException {
+        User user = userService.get(username);
+        Product product = get(id);
         if (product.getOwner().getId().equals(user.getId()) || user.getAuthorities().contains("ROLE_ADMIN")) {
             logger.info("Deleting product {}", id);
             productRepository.deleteById(id);
             return;
         }
-        logger.error("User {} is not authorized to delete product {}", principal.getName(), id);
-        throw new AccessDeniedException("TAKA");
+        logger.error("User {} is not authorized to delete product {}", username, id);
+        throw new AccessDeniedException("Not authorized to delete this ad");
     }
 
     public ProductListDto getFilteredProducts(String searchString, Integer categoryId, Float minimumPrice, Float maximumPrice) {
@@ -96,28 +89,20 @@ public class ProductService {
 
     public ProductListDto getUserProducts(Integer userId) {
         logger.debug("Getting products of user {}", userId);
-        ProductListDto dto = new ProductListDto(categoryRespository.findAll());
+        ProductListDto dto = new ProductListDto();
+        dto.setCategories(categoryRespository.findAll());
         dto.setProducts(productListItemRepository.findAllByUserId(userId));
         return dto;
     }
 
-    public ProductDetailsDto add(ProductPostData data, Principal principal) {
-        User user = userRepository.findByUsername(principal.getName()).orElse(null);
-        if (user == null) {
-            logger.error("Did not find user {}", principal.getName());
-            return null;
-        }
-        Category category = categoryRespository.findById(data.getCategoryId()).orElse(null);
-        if (category == null) {
-            logger.error("Did not find category {}", data.getCategoryId());
-            return null;
-        }
+    public ProductDetailsDto add(ProductPostData data, String username) throws NotFoundException, InvalidInputException, ParseException {
+        User user = userService.get(username);
+        Category category = categoryService.get(data.getCategoryId());
+
         Product product = new Product();
-        if (!setAttributesOfProduct(data, product)) {
-            return null;
-        }
+        setAttributesOfProduct(data, product);
         product.setOwner(user);
-        List<ProductAttribute> productAttributes = setupProductAttributes(data.getAttributes(), null, category);
+        List<ProductAttribute> productAttributes = setupProductAttributes(data.getAttributes(), category);
         product.setAttributes(productAttributes);
         product.setCategory(category);
 
@@ -128,129 +113,89 @@ public class ProductService {
     }
 
     @Transactional
-    public void update(ProductDetailsDto dto, String username) {
-        Product product = productRepository.findById(dto.getId()).orElse(null);
-        if (product == null) {
-            logger.error("Did not find product {}", dto.getId());
-            return;
-        }
+    public void update(ProductDetailsDto dto, String username) throws NotFoundException, ForbiddenException, InvalidInputException {
+        Product product = get(dto.getId());
         if (!product.getOwner().getUsername().equals(username)) {
             logger.warn("User {} is not allowed update product of user {}", username, product.getOwner().getUsername());
-            return;
+            throw new ForbiddenException("You are not allowed to edit this ad!");
         }
-        if (!updateBasicProductAttributes(product, dto)) {
-            return;
-        }
-        if (product.getCategory().getId().equals(dto.getCategoryId())) {
-            logger.trace("Category unchanged");
-            updateCategoryAttributes(dto, product);
-        } else {
-            logger.trace("Category changed");
-            setupNewCategory(product, dto);
-        }
+        updateBasicProductAttributes(product, dto);
+        updateCategoryAttributes(dto, product);
         logger.trace("Saving changes of product {}", product.getId());
         productRepository.save(product);
         logger.info("Updated product {}", product.getId());
     }
 
-    private boolean setAttributesOfProduct(ProductPostData data, Product product) {
+    private void setAttributesOfProduct(ProductPostData data, Product product) throws InvalidInputException, ParseException {
         logger.trace("Setting basic attributes");
-
-        if (!setBasicAttributesOfProduct(product, data.getTitle(), data.getDescription(), data.getPrice(), data.getType())) {
-            return false;
-        }
+        setBasicAttributesOfProduct(product, data.getTitle(), data.getDescription(), data.getPrice(), data.getType());
 
         product.setState("FOR SALE");
         String formattedDate = simpleDateFormat.format(new Date());
-        try {
-            product.setUploadDate(simpleDateFormat.parse(formattedDate));
-            product.setPremiumExpirationDate(simpleDateFormat.parse("2020/12/02"));
-        } catch (ParseException e) {
-            logger.error("ParseException at parsing date");
-            return false;
-        }
-        return true;
-    }
-
-    private void setupNewCategory(Product product, ProductDetailsDto dto) {
-        logger.trace("Setting up new category");
-        Category category = categoryRespository.findById(dto.getCategoryId()).orElse(null);
-        if (category == null) {
-            logger.error("Did not find category {}", dto.getCategoryId());
-            return;
-        }
-        removeCurrentAttributes(product);
-        List<ProductAttribute> attributes = setupProductAttributes(dto.getAttributes(), product.getId(), category);
-        product.setCategory(category);
-        product.setAttributes(attributes);
+        product.setUploadDate(simpleDateFormat.parse(formattedDate));
+        product.setPremiumExpirationDate(simpleDateFormat.parse("2020/12/02"));
     }
 
     private void updateCategoryAttributes(ProductDetailsDto dto, Product product) {
         Map<String, String> dtoAttributes = dto.getAttributes();
         logger.trace("Updating attributes to {}", dtoAttributes);
-        for (ProductAttribute attribute : product.getAttributes()) {
-            CategoryAttribute categoryAttribute = categoryAttributeRepository.findById(attribute.getAttributeId()).orElse(null);
-            if (categoryAttribute == null) {
-                logger.error("Did not find categoryAttribute {}", attribute.getId());
-                return;
-            }
+        for (CategoryAttribute categoryAttribute : product.getCategory().getAttributes()) {
             String newValue = dtoAttributes.get(categoryAttribute.getName());
             if (newValue == null) {
                 logger.warn("Value of attribute '{}' from client is null, skipping update of this attribute", categoryAttribute.getName());
                 continue;
             }
-            attribute.setValue(newValue);
-            productAttributeRepository.save(attribute);
+            ProductAttribute productAttribute = getProductAttributeById(product.getAttributes(), categoryAttribute.getId());
+            if (productAttribute == null) {
+                logger.warn("Attribute '{}' is missing from product, inserting", categoryAttribute.getName());
+                productAttribute = new ProductAttribute();
+                productAttribute.setProductId(product.getId());
+                productAttribute.setAttributeId(categoryAttribute.getId());
+            }
+            productAttribute.setValue(newValue);
+            productAttributeRepository.save(productAttribute);
         }
     }
 
-    @Transactional
-    private void removeCurrentAttributes(Product product) {
-        logger.trace("Deleting current attributes");
-        productAttributeRepository.deleteAllByProductId(product.getId());
-        productAttributeRepository.flush();
+    private ProductAttribute getProductAttributeById(List<ProductAttribute> attributes, Integer attributeId) {
+        for (ProductAttribute attribute : attributes) {
+            if (attribute.getAttributeId().equals(attributeId)) {
+                return attribute;
+            }
+        }
+        return null;
     }
 
-    private boolean updateBasicProductAttributes(Product product, ProductDetailsDto dto) {
+    private void updateBasicProductAttributes(Product product, ProductDetailsDto dto) throws InvalidInputException {
         logger.trace("Updating basic attributes");
-         return setBasicAttributesOfProduct(product, dto.getTitle(), dto.getDescription(), dto.getPrice(), dto.getType());
+        setBasicAttributesOfProduct(product, dto.getTitle(), dto.getDescription(), dto.getPrice(), dto.getType());
     }
 
-    private boolean setBasicAttributesOfProduct(Product product, String title, String description, Float price, String type) {
+    private void setBasicAttributesOfProduct(Product product, String title, String description, Float price, String type) throws InvalidInputException {
         if (title == null || title.equals("")) {
-            logger.error("Title can't be empty!");
-            return false;
+            throw new InvalidInputException("Title can't be empty!");
         }
         product.setTitle(title);
-
-        if (description == null || description.equals("")) {
-            logger.error("Description can't be empty!");
-            return false;
-        }
         product.setDescription(description);
 
         if (price == null || price < 0.1) {
-            logger.error("Price can't be empty or less than 0.1!");
-            return false;
+            throw new InvalidInputException("Price can't be empty or less than 0.1!");
         }
         product.setPrice(price);
 
         if (type == null || type.equals("")) {
-            logger.error("Type can't be empty!");
-            return false;
+            throw new InvalidInputException("Type can't be empty!");
         }
         product.setType(type);
-        return true;
     }
 
-    private List<ProductAttribute> setupProductAttributes(Map<String, String> attributes, Integer productId, Category category) {
+    private List<ProductAttribute> setupProductAttributes(Map<String, String> attributes, Category category) {
         logger.trace("Setting up category attributes");
         List<ProductAttribute> productAttributes = new ArrayList<>();
 
         for (CategoryAttribute attribute : category.getAttributes()) {
             ProductAttribute productAttribute = new ProductAttribute();
             productAttribute.setAttributeId(attribute.getId());
-            productAttribute.setProductId(productId);
             String value = attributes.get(attribute.getName());
             if (value == null) {
                 logger.warn("Value of attribute '{}' from client is null, skipping inserting this attribute", attribute.getName());
@@ -263,7 +208,8 @@ public class ProductService {
     }
 
     private ProductListDto filterByPrice(List<ProductListItem> products, Float minimum, Float maximum) {
-        ProductListDto dto = new ProductListDto(categoryRespository.findAll());
+        ProductListDto dto = new ProductListDto();
+        dto.setCategories(categoryRespository.findAll());
         if (minimum == null && maximum == null) {
             logger.trace("No price filtering parameter given, skipping");
             dto.setProducts(products);
@@ -286,4 +232,9 @@ public class ProductService {
         dto.setProducts(filteredList);
         return dto;
     }
+
+    Product get(Integer id) throws NotFoundException {
+        return productRepository.findById(id).orElseThrow(() -> new NotFoundException("Ad not found!"));
+    }
+
 }

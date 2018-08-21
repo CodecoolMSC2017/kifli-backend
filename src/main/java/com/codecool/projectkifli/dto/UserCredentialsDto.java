@@ -16,6 +16,9 @@ public class UserCredentialsDto {
     private List<String> authorities;
     private Credentials credentials;
 
+    public UserCredentialsDto() {
+    }
+
     public UserCredentialsDto(User user) {
         this.id = user.getId();
         this.username = user.getUsername();
@@ -57,5 +60,37 @@ public class UserCredentialsDto {
 
     public Credentials getCredentials() {
         return credentials;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setAuthorities(List<String> authorities) {
+        this.authorities = authorities;
+    }
+
+    public void setCredentials(Credentials credentials) {
+        this.credentials = credentials;
     }
 }

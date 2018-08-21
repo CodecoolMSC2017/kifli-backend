@@ -35,18 +35,21 @@ INSERT INTO category_attributes (category_id, name, type) VALUES (1, 'Functional
 INSERT INTO category_attributes (category_id, name, type) VALUES (2, 'Size', 'NUMBER'); -- 4
 INSERT INTO category_attributes (category_id, name, type) VALUES (2, 'Color', 'STRING'); -- 5
 INSERT INTO category_attributes (category_id, name, type) VALUES (2, 'Location', 'STRING'); -- 6
-INSERT INTO category_attributes (category_id, name, type) VALUES (3, 'Species', 'STRING'); --7
-INSERT INTO category_attributes (category_id, name, type) VALUES (3, 'Age', 'NUMBER'); --8
-INSERT INTO category_attributes (category_id, name, type) VALUES (3, 'Gender', 'STRING'); --9
-INSERT INTO category_attributes (category_id, name, type) VALUES (3, 'Weight', 'NUMBER'); --10
-INSERT INTO category_attributes (category_id, name, type) VALUES (4, 'Material', 'STRING'); --11
-INSERT INTO category_attributes (category_id, name, type) VALUES (4, 'Used', 'BOOL'); --12
-INSERT INTO category_attributes (category_id, name, type) VALUES (5, 'Type', 'STRING'); --13
-INSERT INTO category_attributes (category_id, name, type) VALUES (5, 'Ideal Region', 'STRING'); --14
-INSERT INTO category_attributes (category_id, name, type) VALUES (5, 'Advantages', 'STRING'); --15
-INSERT INTO category_attributes (category_id, name, type) VALUES (5, 'Soil type', 'STRING'); --16
-INSERT INTO category_attributes (category_id, name, type) VALUES (6, 'Type', 'STRING'); --17
-INSERT INTO category_attributes (category_id, name, type) VALUES (6, 'Quantity/Package', 'STRING'); --18
+INSERT INTO category_attributes (category_id, name, type) VALUES (3, 'Species', 'STRING'); -- 7
+INSERT INTO category_attributes (category_id, name, type) VALUES (3, 'Age', 'NUMBER'); -- 8
+INSERT INTO category_attributes (category_id, name, type) VALUES (3, 'Gender', 'STRING'); -- 9
+INSERT INTO category_attributes (category_id, name, type) VALUES (3, 'Weight', 'NUMBER'); -- 10
+INSERT INTO category_attributes (category_id, name, type) VALUES (4, 'Material', 'STRING'); -- 11
+INSERT INTO category_attributes (category_id, name, type) VALUES (4, 'Used', 'BOOL'); -- 12
+INSERT INTO category_attributes (category_id, name, type) VALUES (5, 'Type', 'STRING'); -- 13
+INSERT INTO category_attributes (category_id, name, type) VALUES (5, 'Ideal Region', 'STRING'); -- 14
+INSERT INTO category_attributes (category_id, name, type) VALUES (5, 'Advantages', 'STRING'); -- 15
+INSERT INTO category_attributes (category_id, name, type) VALUES (5, 'Soil type', 'STRING'); -- 16
+INSERT INTO category_attributes (category_id, name, type) VALUES (6, 'Type', 'STRING'); -- 17
+INSERT INTO category_attributes (category_id, name, type) VALUES (6, 'Quantity/Package', 'STRING'); -- 18
+INSERT INTO category_attributes (category_id, name, type) VALUES (6, 'Real', 'BOOL'); -- 19
+INSERT INTO category_attributes (category_id, name, type) VALUES (6, 'Legal', 'BOOL'); -- 20
+INSERT INTO category_attributes (category_id, name, type) VALUES (6, 'Is it blue?', 'BOOL'); -- 21
 
 
 -- 1

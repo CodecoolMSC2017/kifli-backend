@@ -3,16 +3,18 @@ package com.codecool.projectkifli.controller;
 import com.codecool.projectkifli.dto.UserCredentialsDto;
 import com.codecool.projectkifli.model.User;
 import com.codecool.projectkifli.service.UserService;
+import javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.security.Principal;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -26,22 +28,38 @@ public class AuthController {
     @GetMapping("")
     public UserCredentialsDto get(Principal principal) {
         logger.trace("Get user {}", principal.getName());
-        User user = userService.get(principal.getName());
-        if (user == null) {
+        try {
+            User user = userService.get(principal.getName());
+            if(!user.getEnabled()) {
+                logger.error(principal.getName() + " is not verified yet");
+                return null;
+            }
+            logger.info("User {} has logged in successfully", user.getUsername());
+            return new UserCredentialsDto(user);
+        } catch (NotFoundException e) {
             logger.error("Did not find user {}", principal.getName());
             return null;
         }
-        if(!user.getEnabled()) {
-            logger.error(principal.getName() + " is not verified yet");
-            return null;
-        }
-        logger.info("User {} has logged in successfully", user.getUsername());
-        return new UserCredentialsDto(user);
+
     }
 
     @DeleteMapping("")
     public void delete(HttpSession session, Principal principal) {
         logger.info("User {} has logged out", principal.getName());
         session.invalidate();
+    }
+
+    @PostMapping("")
+    public User authenticateUserByToken(@RequestBody Map<String, String> map, HttpServletResponse response) {
+        try {
+            return userService.getUserByToken(map.get("idToken"));
+        } catch (GeneralSecurityException | IOException e) {
+            logger.error("Unable to authenticate user", e);
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        } catch (NotFoundException e) {
+            logger.error("Error: {}", e.getMessage());
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+        return null;
     }
 }

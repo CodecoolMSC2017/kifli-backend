@@ -10,7 +10,7 @@ public class ProductListDto {
     private List<ProductListItem> products;
     private List<Category> categories;
 
-    public ProductListDto(List<Category> categories) {
+    public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
 
