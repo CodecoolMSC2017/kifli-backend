@@ -2,8 +2,11 @@ package com.codecool.projectkifli.controller;
 
 import com.codecool.projectkifli.dto.ProductDetailsDto;
 import com.codecool.projectkifli.dto.ProductListDto;
+import com.codecool.projectkifli.exception.ForbiddenException;
+import com.codecool.projectkifli.exception.InvalidInputException;
 import com.codecool.projectkifli.model.ProductPostData;
 import com.codecool.projectkifli.service.ProductService;
+import javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,21 +34,28 @@ public class ProductController {
     )
     public ProductDetailsDto findById(@PathVariable("id") Integer id, HttpServletResponse resp) {
         logger.trace("Get product {}", id);
-        ProductDetailsDto dto = productService.findById(id);
-        if (dto == null) {
+        try {
+            return productService.findById(id);
+        } catch (NotFoundException e) {
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            resp.setHeader("errorMessage", e.getMessage());
+            return null;
         }
-        return dto;
     }
 
     @DeleteMapping(value = "/{id}")
-    public void delete(@PathVariable("id") Integer id, Principal principal) {
+    public void delete(@PathVariable("id") Integer id, Principal principal, HttpServletResponse resp) {
         if (principal == null) {
             logger.error("Anonymous user trying to delete product {}", id);
             throw new AccessDeniedException("Can't delete product without login");
         }
         logger.trace("Delete product {} by user {}", id, principal.getName());
-        productService.delete(id, principal);
+        try {
+            productService.delete(id, principal.getName());
+        } catch (NotFoundException e) {
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            resp.setHeader("errorMessage", e.getMessage());
+        }
     }
 
     @PostMapping(
@@ -53,13 +63,32 @@ public class ProductController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ProductDetailsDto postAd(@RequestBody ProductPostData data, Principal principal) throws ParseException {
+    public ProductDetailsDto postAd(@RequestBody ProductPostData data, Principal principal, HttpServletResponse resp) throws ParseException {
         if (principal == null) {
             logger.error("Anonymous user trying to add new product");
             throw new AccessDeniedException("Can't add new product without login");
         }
         logger.trace("Post by user {}", principal.getName());
-        return productService.add(data, principal);
+        String errorMessage = null;
+        Integer errorStatus;
+        try {
+            return productService.add(data, principal.getName());
+        } catch (NotFoundException e) {
+            errorMessage = e.getMessage();
+            errorStatus = HttpServletResponse.SC_NOT_FOUND;
+        } catch (InvalidInputException e) {
+            errorMessage = e.getMessage();
+            errorStatus = HttpServletResponse.SC_BAD_REQUEST;
+        } catch (ParseException e) {
+            logger.error("Error parsing date", e);
+            errorStatus = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+        }
+        if (errorMessage != null) {
+            logger.warn("Error adding product: {}", errorMessage);
+            resp.setHeader("errorMessage", errorMessage);
+        }
+        resp.setStatus(errorStatus);
+        return null;
     }
 
     @GetMapping(
@@ -92,13 +121,31 @@ public class ProductController {
             value = "",
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public void updateProduct(@RequestBody ProductDetailsDto dto, Principal principal) {
+    public void updateProduct(@RequestBody ProductDetailsDto dto, Principal principal, HttpServletResponse resp) {
         if (principal == null) {
             logger.warn("User trying to update product {} is not logged in", dto.getId());
             return;
         }
         logger.trace("Put product {} by user {}", dto.getId(), principal.getName());
-        productService.update(dto, principal.getName());
+        String errorMessage = null;
+        Integer errorStatus;
+        try {
+            productService.update(dto, principal.getName());
+            return;
+        } catch (NotFoundException e) {
+            errorMessage = e.getMessage();
+            errorStatus = HttpServletResponse.SC_NOT_FOUND;
+        } catch (ForbiddenException e) {
+            errorStatus = HttpServletResponse.SC_UNAUTHORIZED;
+        } catch (InvalidInputException e) {
+            errorMessage = e.getMessage();
+            errorStatus = HttpServletResponse.SC_BAD_REQUEST;
+        }
+        if (errorMessage != null) {
+            logger.warn("Error updating product: {}", errorMessage);
+            resp.setHeader("errorMessage", errorMessage);
+        }
+        resp.setStatus(errorStatus);
     }
 
 }
