@@ -1,7 +1,6 @@
 package com.codecool.projectkifli.model;
 
 import com.codecool.projectkifli.dto.UserCredentialsDto;
-import com.codecool.projectkifli.dto.UserDto;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -33,6 +32,10 @@ public class User implements Serializable {
     @JoinColumn(name = "id")
     private Credentials credentials;
 
+   /* @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
+    private VerificationNumber verificationNumber;
+*/
     public User() {
     }
 
@@ -111,4 +114,12 @@ public class User implements Serializable {
     public UserCredentialsDto toCredentialsDto() {
         return new UserCredentialsDto(this);
     }
+
+  /*  public VerificationNumber getVerificationNumber() {
+        return verificationNumber;
+    }
+
+    public void setVerificationNumber(VerificationNumber verificationNumber) {
+        this.verificationNumber = verificationNumber;
+    }*/
 }

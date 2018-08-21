@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS categories CASCADE;
 DROP TABLE IF EXISTS credentials CASCADE;
 DROP TABLE IF EXISTS authorities CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS verification_number CASCADE;
 DROP TYPE IF EXISTS data_type;
 
 CREATE TABLE users (
@@ -17,6 +18,13 @@ CREATE TABLE users (
     enabled BOOLEAN NOT NULL,
     first_name VARCHAR(20),
     last_name VARCHAR(20)
+);
+
+CREATE TABLE verification_number (
+    username VARCHAR(50) NOT NULL,
+    verification_number INTEGER default null,
+    FOREIGN KEY (username) REFERENCES users(username)
+
 );
 
 CREATE TABLE authorities (

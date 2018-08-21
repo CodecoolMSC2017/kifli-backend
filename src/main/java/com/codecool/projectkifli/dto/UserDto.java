@@ -51,4 +51,5 @@ public class UserDto {
     public List<String> getAuthorities() {
         return authorities;
     }
+
 }

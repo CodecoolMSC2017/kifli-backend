@@ -3,13 +3,12 @@ package com.codecool.projectkifli.service;
 import com.codecool.projectkifli.dto.UserCredentialsDto;
 import com.codecool.projectkifli.dto.UserDto;
 import com.codecool.projectkifli.model.User;
+import com.codecool.projectkifli.model.VerificationNumber;
 import com.codecool.projectkifli.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
@@ -70,7 +69,8 @@ public class UserService {
         user.setEmail(email);
         user.setFirstName(firstName);
         user.setLastName(lastName);
-        user.setEnabled(false);
+        user.setEnabled(true);
+        //user.setVerificationNumber(new VerificationNumber(username));
         return user;
     }
 
