@@ -53,9 +53,8 @@ public class AuthController {
     @PostMapping("")
     public UserCredentialsDto authenticateUserByToken(@RequestBody Map<String, String> map, HttpServletResponse response) {
         try {
-            System.out.println("vaaaaaaaaaaaaaalami");
-            User user = userService.getUserByToken(map.get("idToken"));
-            return new UserCredentialsDto(user);
+            logger.trace("Post");
+            return userService.getUserByToken(map.get("idToken"));
         } catch (GeneralSecurityException | IOException e) {
             logger.error("Unable to authenticate user", e);
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -67,7 +66,6 @@ public class AuthController {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             logger.warn("Unable to register: {}", e.getMessage());
         }
-        System.out.println("hmmmmmmmmm");
         return null;
     }
 }

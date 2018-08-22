@@ -122,11 +122,12 @@ public class UserService {
     }
 
     @Transactional
-    public User googleAdd(
+    private User googleAdd(
             String username,
             String email,
             String firstName,
-            String lastName) throws InvalidInputException, NotFoundException {
+            String lastName
+    ) throws InvalidInputException, NotFoundException {
         if (username == null || username.equals("")) {
             throw new InvalidInputException("Username can't be empty!");
         }
@@ -139,6 +140,7 @@ public class UserService {
         if (lastName == null || lastName.equals("")) {
             throw new InvalidInputException("Last name can't be empty!");
         }
+        logger.trace("Creating new user");
         userDetailsManager.createUser(new org.springframework.security.core.userdetails.User(
                 username,
                 "",
@@ -202,34 +204,24 @@ public class UserService {
 
     private User getGoogleAuthenticatedUser(String email, String firstName, String lastName) throws NotFoundException, InvalidInputException {
         if (!isEmailExists(email)) {
+            logger.debug("Email does not exists yet");
             return googleAdd(email, email, firstName, lastName);
         }
+        logger.debug("Email exists, getting user by it");
         return getUserByEmail(email);
     }
 
-    public User getUserByToken(String idToken) throws GeneralSecurityException, IOException, NotFoundException, InvalidInputException {
-        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
-                .setAudience(Collections.singletonList("222157294364-s0r226g6ue92bp6n78iaqcthjbohi3pp.apps.googleusercontent.com")).build();
-
-        GoogleIdToken token = verifier.verify(idToken);
-        if (token == null) {
-            logger.error("Invalid token");
-            return null;
-        }
+    public UserCredentialsDto getUserByToken(String idToken) throws GeneralSecurityException, IOException, NotFoundException, InvalidInputException {
+        GoogleIdToken token = verifyToken(idToken);
         GoogleIdToken.Payload payload = token.getPayload();
-        String userId = payload.getSubject();
 
         String email = payload.getEmail();
-        boolean emailcerified = payload.getEmailVerified();
-        String name = (String) payload.get("name");
-        String pictureUrl = (String) payload.get("picture");
-        String locale = (String) payload.get("locale");
         String familyName = (String) payload.get("family_name");
         String givenName = (String) payload.get("given_name");
-        System.out.println(name);
 
+        logger.debug("Authenticating user of email {}", email);
         User user = getGoogleAuthenticatedUser(email, familyName, givenName);
-
+        logger.trace("Got user, authenticating now");
         List<GrantedAuthority> roles = user.getAuthorities()
                 .stream()
                 .map(SimpleGrantedAuthority::new)
@@ -238,7 +230,21 @@ public class UserService {
         Authentication auth = new UsernamePasswordAuthenticationToken(user.getEmail(), null, roles);
 
         SecurityContextHolder.getContext().setAuthentication(auth);
+        logger.trace("Set authentication, returning user");
+        return new UserCredentialsDto(user);
+    }
 
-        return user;
+    private GoogleIdToken verifyToken(String idToken) throws GeneralSecurityException, IOException {
+        logger.trace("Verifying token");
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
+                .setAudience(Collections.singletonList("222157294364-s0r226g6ue92bp6n78iaqcthjbohi3pp.apps.googleusercontent.com"))
+                .build();
+
+        GoogleIdToken token = verifier.verify(idToken);
+        if (token == null) {
+            logger.debug("Token is null");
+            throw new IOException();
+        }
+        return token;
     }
 }
