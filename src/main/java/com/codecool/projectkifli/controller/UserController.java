@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
@@ -101,7 +102,7 @@ public class UserController {
             value = "/current",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public UserCredentialsDto getLoggedInUser(Principal principal, HttpServletResponse response) {
+    public UserCredentialsDto getLoggedInUser(Principal principal, HttpServletResponse response, HttpSession session) {
         logger.trace("Get current user");
         if (principal == null) {
             logger.debug("Not logged in, returning null");
@@ -111,9 +112,9 @@ public class UserController {
             User user = userService.get(principal.getName());
             return new UserCredentialsDto(user);
         } catch (NotFoundException e) {
-            response.setHeader("errorMessage", e.getMessage());
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            logger.warn("User not found");
+            session.invalidate();
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            logger.warn(e.getMessage());
             return null;
         }
     }
