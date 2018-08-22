@@ -90,7 +90,6 @@ public class ProductService {
         if (maximumPrice == null) {
             maximumPrice = MAXIMUM_PRICE;
         }
-        logger.trace("Filtering price between {} and {}", minimumPrice, maximumPrice);
 
         List<ProductListItem> products;
         if (searchString == null || searchString.equals("")) {
@@ -160,23 +159,6 @@ public class ProductService {
         int totalPages = productsSize / NUMBER_OF_ITEMS_ON_PAGE + 1;
         dto.setTotalPages(totalPages);
         logger.debug("Returning page {}/{}", page, totalPages);
-    }
-
-    private List<ProductListItem> filterBySearchAndCategory(String searchString, Integer categoryId) {
-        if (searchString == null || searchString.equals("")) {
-            if (categoryId == null || categoryId == 0) {
-                logger.trace("Finding all products");
-                return productListItemRepository.findAll();
-            }
-            logger.trace("Filtering by category {}", categoryId);
-            return productListItemRepository.findByCategoryId(categoryId);
-        }
-        if (categoryId == null || categoryId == 0) {
-            logger.trace("Filtering by searchString '{}'", searchString);
-            return productListItemRepository.findBySearchTitleString(searchString);
-        }
-        logger.trace("Filtering by searchString '{}' and category {}", searchString, categoryId);
-        return productListItemRepository.findBySearchTitleStringAndCategoryId(searchString, categoryId);
     }
 
     private void filterByPrice(ProductListDto dto, Float minimum, Float maximum) {
