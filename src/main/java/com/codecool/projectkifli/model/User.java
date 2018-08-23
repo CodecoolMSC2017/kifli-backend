@@ -32,10 +32,10 @@ public class User implements Serializable {
     @JoinColumn(name = "id")
     private Credentials credentials;
 
-   /* @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
     private VerificationNumber verificationNumber;
-*/
+
     public User() {
     }
 
@@ -115,11 +115,11 @@ public class User implements Serializable {
         return new UserCredentialsDto(this);
     }
 
-  /*  public VerificationNumber getVerificationNumber() {
+    public VerificationNumber getVerificationNumber() {
         return verificationNumber;
     }
 
     public void setVerificationNumber(VerificationNumber verificationNumber) {
         this.verificationNumber = verificationNumber;
-    }*/
+    }
 }

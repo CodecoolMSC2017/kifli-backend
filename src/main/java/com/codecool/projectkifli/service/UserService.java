@@ -117,7 +117,8 @@ public class UserService {
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setEnabled(true);
-        //user.setVerificationNumber(new VerificationNumber(username));
+        user.setVerificationNumber(new VerificationNumber(user.getId()));
+        System.out.println(user.getVerificationNumber().toString());
         return user;
     }
 
