@@ -1,6 +1,7 @@
 package com.codecool.projectkifli.controller;
 
 import com.codecool.projectkifli.dto.UserCredentialsDto;
+import com.codecool.projectkifli.exception.InvalidInputException;
 import com.codecool.projectkifli.model.User;
 import com.codecool.projectkifli.service.UserService;
 import javassist.NotFoundException;
@@ -50,8 +51,9 @@ public class AuthController {
     }
 
     @PostMapping("")
-    public User authenticateUserByToken(@RequestBody Map<String, String> map, HttpServletResponse response) {
+    public UserCredentialsDto authenticateUserByToken(@RequestBody Map<String, String> map, HttpServletResponse response) {
         try {
+            logger.trace("Post");
             return userService.getUserByToken(map.get("idToken"));
         } catch (GeneralSecurityException | IOException e) {
             logger.error("Unable to authenticate user", e);
@@ -59,6 +61,10 @@ public class AuthController {
         } catch (NotFoundException e) {
             logger.error("Error: {}", e.getMessage());
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        } catch (InvalidInputException e) {
+            response.setHeader("errorMessage", e.getMessage());
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.warn("Unable to register: {}", e.getMessage());
         }
         return null;
     }

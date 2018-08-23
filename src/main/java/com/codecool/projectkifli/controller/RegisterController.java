@@ -4,6 +4,8 @@ import com.codecool.projectkifli.service.EmailService;
 import com.codecool.projectkifli.exception.InvalidInputException;
 import com.codecool.projectkifli.service.UserService;
 import javassist.NotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,8 @@ import java.util.Map;
 
 @RestController
 public class RegisterController {
+
+    private static final Logger logger = LoggerFactory.getLogger(RegisterController.class);
 
     @Autowired
     ApplicationEventPublisher eventPublisher;
@@ -35,8 +39,13 @@ public class RegisterController {
             userService.add(username, email, password, confirmPassword, firstName, lastName);
         //  emailService.simpleMessage(email, username);
         } catch (InvalidInputException e) {
-            // TODO: handle exceptions
+            response.setHeader("errorMessage", e.getMessage());
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            logger.warn("Unable to register: {}", e.getMessage());
         } catch (NotFoundException e) {
+            response.setHeader("errorMessage", e.getMessage());
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            logger.warn("Unable to register: {}", e.getMessage());
         }
     }
 }
