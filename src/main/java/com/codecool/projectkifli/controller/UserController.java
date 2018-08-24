@@ -126,17 +126,23 @@ public class UserController {
     )
     public UserCredentialsDto updateUser(@RequestBody UserCredentialsDto user, Principal principal, HttpServletResponse response) {
         logger.trace("Put by {}", principal.getName());
+        String errorMessage;
+        int errorStatus;
         try {
             return userService.updateUser(user, principal.getName());
         } catch (NotFoundException e) {
-            response.setHeader("errorMessage", e.getMessage());
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            logger.warn("Can't update user: {}", e.getMessage());
+            errorMessage = e.getMessage();
+            errorStatus = HttpServletResponse.SC_NOT_FOUND;
         } catch (ForbiddenException e) {
-            response.setHeader("errorMessage", e.getMessage());
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            logger.warn("Can't update user: {}", e.getMessage());
+            errorMessage = e.getMessage();
+            errorStatus = HttpServletResponse.SC_FORBIDDEN;
+        } catch (InvalidInputException e) {
+            errorMessage = e.getMessage();
+            errorStatus = HttpServletResponse.SC_BAD_REQUEST;
         }
+        response.setHeader("errorMessage", errorMessage);
+        response.setStatus(errorStatus);
+        logger.warn("Can't update user: {}", errorMessage);
         return null;
     }
 }

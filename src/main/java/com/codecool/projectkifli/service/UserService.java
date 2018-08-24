@@ -4,6 +4,7 @@ import com.codecool.projectkifli.dto.UserCredentialsDto;
 import com.codecool.projectkifli.dto.UserDto;
 import com.codecool.projectkifli.exception.ForbiddenException;
 import com.codecool.projectkifli.exception.InvalidInputException;
+import com.codecool.projectkifli.model.Credentials;
 import com.codecool.projectkifli.model.User;
 import com.codecool.projectkifli.model.VerificationNumber;
 import com.codecool.projectkifli.repository.UserRepository;
@@ -178,19 +179,54 @@ public class UserService {
         return user.getPassword();
     }
 
-    public UserCredentialsDto updateUser(UserCredentialsDto newUser, String username) throws NotFoundException, ForbiddenException {
+    public UserCredentialsDto updateUser(UserCredentialsDto newUser, String username) throws NotFoundException, ForbiddenException, InvalidInputException {
         User user = get(username);
         if (!newUser.getId().equals(user.getId())) {
             throw new ForbiddenException("You can only update your own profile!");
         }
+        checkValidUserData(newUser);
+
         user.setEmail(newUser.getEmail());
         user.setFirstName(newUser.getFirstName());
         user.setLastName(newUser.getLastName());
         user.setCredentials(newUser.getCredentials());
 
+        System.out.println(user.getCredentials());
         User save = userRepository.save(user);
         logger.info("Updated profile of user {}", username);
         return new UserCredentialsDto(save);
+    }
+
+    private void checkValidUserData(UserCredentialsDto user) throws InvalidInputException {
+        if (checkEmptyString(user.getEmail())) {
+            throw new InvalidInputException("Email can't be empty!");
+        }
+        if (checkEmptyString(user.getFirstName())) {
+            throw new InvalidInputException("First name can't be empty!");
+        }
+        if (checkEmptyString(user.getLastName())) {
+            throw new InvalidInputException("Last name can't be empty!");
+        }
+        Credentials credentials = user.getCredentials();
+        if (checkEmptyString(credentials.getCity())) {
+            throw new InvalidInputException("City can't be empty!");
+        }
+        if (checkEmptyString(credentials.getCountry())) {
+            throw new InvalidInputException("Country can't be empty!");
+        }
+        if (checkEmptyString(credentials.getPhone())) {
+            throw new InvalidInputException("Phone can't be empty!");
+        }
+        if (checkEmptyString(credentials.getState())) {
+            throw new InvalidInputException("State can't be empty!");
+        }
+        if (checkEmptyString(credentials.getStreet())) {
+            throw new InvalidInputException("Street can't be empty!");
+        }
+    }
+
+    private boolean checkEmptyString(String string) {
+        return string == null || string.equals("");
     }
 
     private boolean isEmailExists(String email) {

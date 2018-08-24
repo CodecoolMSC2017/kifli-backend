@@ -116,7 +116,7 @@ public class ProductService {
 
     private void findAndSetAllProducts(ProductListDto dto, Integer page) {
         if (page == null || page < 1) {
-            logger.warn("Illegal page number: {}", page);
+            logger.debug("Illegal page number: {}", page);
             page = 1;
         }
         int amountOfProducts = (int) productRepository.count();

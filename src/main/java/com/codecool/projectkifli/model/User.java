@@ -28,7 +28,7 @@ public class User implements Serializable {
     @Column(name = "authority")
     private List<String> authorities;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "id")
     private Credentials credentials;
 
