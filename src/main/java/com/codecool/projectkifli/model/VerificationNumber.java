@@ -9,20 +9,20 @@ public class VerificationNumber {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String userName;
+    private Integer userId;
     private Integer verificationNumber;
 
-    public VerificationNumber(String userName) {
-        this.userName = userName;
+    public VerificationNumber(Integer userId) {
+        this.userId = userId;
         this.verificationNumber = new Random().nextInt();
     }
 
-    public String userName() {
-        return userName;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public Integer getVerification_number() {

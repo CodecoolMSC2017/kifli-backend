@@ -21,10 +21,9 @@ CREATE TABLE users (
 );
 
 CREATE TABLE verification_number (
-    username VARCHAR(50) NOT NULL,
+    user_id INTEGER NOT NULL UNIQUE,
     verification_number INTEGER default null,
-    FOREIGN KEY (username) REFERENCES users(username)
-
+    FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 CREATE TABLE authorities (
