@@ -2,6 +2,7 @@ package com.codecool.projectkifli.controller;
 
 import com.codecool.projectkifli.dto.UserCredentialsDto;
 import com.codecool.projectkifli.dto.UserDto;
+import com.codecool.projectkifli.dto.UserListDto;
 import com.codecool.projectkifli.exception.ForbiddenException;
 import com.codecool.projectkifli.exception.InvalidInputException;
 import com.codecool.projectkifli.model.User;
@@ -144,5 +145,19 @@ public class UserController {
         response.setStatus(errorStatus);
         logger.warn("Can't update user: {}", errorMessage);
         return null;
+    }
+
+    @GetMapping(
+            value = "/all",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public UserListDto getAllUsers (HttpServletResponse response) {
+        try {
+            return userService.getUserList();
+        } catch(NotFoundException e) {
+            logger.warn(e.getMessage());
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return null;
+        }
     }
 }
