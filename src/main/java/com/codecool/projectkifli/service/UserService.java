@@ -290,7 +290,7 @@ public class UserService {
         return token;
     }
 
-    public UserListDto getUserList() {
+    public UserListDto getUserList()throws NotFoundException {
         UserListDto userListDto = new UserListDto();
         userListDto.setUsers(userListItemRepository.findAll());
         return userListDto;
