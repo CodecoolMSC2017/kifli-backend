@@ -2,11 +2,13 @@ package com.codecool.projectkifli.service;
 
 import com.codecool.projectkifli.dto.UserCredentialsDto;
 import com.codecool.projectkifli.dto.UserDto;
+import com.codecool.projectkifli.dto.UserListDto;
 import com.codecool.projectkifli.exception.ForbiddenException;
 import com.codecool.projectkifli.exception.InvalidInputException;
 import com.codecool.projectkifli.model.Credentials;
 import com.codecool.projectkifli.model.User;
 import com.codecool.projectkifli.model.VerificationNumber;
+import com.codecool.projectkifli.repository.UserListItemRepository;
 import com.codecool.projectkifli.repository.UserRepository;
 import javassist.NotFoundException;
 import org.slf4j.Logger;
@@ -59,6 +61,9 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UserListItemRepository userListItemRepository;
 
     public List<UserDto> getAll() {
         logger.debug("Finding all users");
@@ -283,5 +288,11 @@ public class UserService {
             throw new IOException();
         }
         return token;
+    }
+
+    public UserListDto getUserList() {
+        UserListDto userListDto = new UserListDto();
+        userListDto.setUsers(userListItemRepository.findAll());
+        return userListDto;
     }
 }
