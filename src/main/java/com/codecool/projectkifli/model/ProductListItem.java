@@ -17,6 +17,7 @@ public class ProductListItem {
     private String state;
     private String uploadDate;
     private String premiumExpirationDate;
+    private Boolean activation;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "categoryId", referencedColumnName = "id")
@@ -107,5 +108,13 @@ public class ProductListItem {
 
     public String getCategory() {
         return category.getName();
+    }
+
+    public Boolean getActivation() {
+        return activation;
+    }
+
+    public void setActivation(Boolean activation) {
+        this.activation = activation;
     }
 }

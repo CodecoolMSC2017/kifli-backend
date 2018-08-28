@@ -309,4 +309,13 @@ public class ProductService {
         return productRepository.findById(id).orElseThrow(() -> new NotFoundException("Ad not found!"));
     }
 
+    public ProductListDto getInactiveProducts(Integer page) {
+        logger.debug("Getting inactive products");
+        ProductListDto dto = new ProductListDto();
+        dto.setCategories(categoryRespository.findAll());
+        dto.setProducts(productListItemRepository.findNotActivationAds());
+        filterByPage(dto, page);
+        return dto;
+    }
+
 }

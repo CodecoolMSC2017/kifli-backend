@@ -151,4 +151,13 @@ public class ProductController {
         resp.setStatus(errorStatus);
     }
 
+    @GetMapping(
+            value = "/admin",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ProductListDto getInactiveProducts(@Nullable @RequestParam("page") Integer page) {
+        logger.trace("Get inactive products");
+        return productService.getInactiveProducts(page);
+    }
+
 }

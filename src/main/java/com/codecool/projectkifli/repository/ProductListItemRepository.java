@@ -20,4 +20,7 @@ public interface ProductListItemRepository extends JpaRepository<ProductListItem
     @Query(value = "SELECT * FROM product_ads WHERE lower(title) LIKE %?1% " +
             "AND category_id = ?2", nativeQuery = true)
     List<ProductListItem> findBySearchTitleStringAndCategoryId(String searchString, Integer categoryId);
+
+    @Query(value = "SELECT * FROM product_ads WHERE activation = false", nativeQuery = true)
+    List<ProductListItem> findNotActivationAds();
 }
