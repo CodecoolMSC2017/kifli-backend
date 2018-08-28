@@ -226,6 +226,7 @@ public class ProductService {
     private void setAttributesOfProduct(ProductPostData data, Product product) throws InvalidInputException, ParseException {
         logger.trace("Setting basic attributes");
         setBasicAttributesOfProduct(product, data.getTitle(), data.getDescription(), data.getPrice(), data.getType());
+        product.setActivation(data.getActivation());
 
         product.setState("FOR SALE");
         String formattedDate = simpleDateFormat.format(new Date());

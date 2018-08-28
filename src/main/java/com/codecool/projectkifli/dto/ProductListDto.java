@@ -11,6 +11,7 @@ public class ProductListDto {
     private List<Category> categories;
     private Integer page;
     private Integer totalPages;
+    private Boolean activation;
 
     public List<ProductListItem> getProducts() {
         return products;
@@ -42,5 +43,13 @@ public class ProductListDto {
 
     public void setTotalPages(Integer totalPages) {
         this.totalPages = totalPages;
+    }
+
+    public Boolean getActivation() {
+        return activation;
+    }
+
+    public void setActivation(Boolean activation) {
+        this.activation = activation;
     }
 }

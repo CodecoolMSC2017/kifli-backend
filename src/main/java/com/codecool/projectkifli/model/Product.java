@@ -19,6 +19,7 @@ public class Product implements Serializable {
     private String state;
     private Date uploadDate;
     private Date premiumExpirationDate;
+    private Boolean activation;
 
     @ElementCollection
     @CollectionTable(
@@ -139,6 +140,14 @@ public class Product implements Serializable {
         this.owner = owner;
     }
 
+    public Boolean getActivation() {
+        return activation;
+    }
+
+    public void setActivation(Boolean activation) {
+        this.activation = activation;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -154,6 +163,8 @@ public class Product implements Serializable {
                 ", category=" + category +
                 ", attributes=" + attributes +
                 ", owner=" + owner +
+                ", activation=" + activation +
                 '}';
     }
+
 }

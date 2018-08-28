@@ -10,6 +10,7 @@ public class ProductPostData {
     private String type;
     private Map<String, String> attributes;
     private Integer categoryId;
+    private Boolean activation;
 
     public ProductPostData() {
     }
@@ -62,6 +63,14 @@ public class ProductPostData {
         this.categoryId = categoryId;
     }
 
+    public Boolean getActivation() {
+        return activation;
+    }
+
+    public void setActivation(Boolean activation) {
+        this.activation = activation;
+    }
+
     @Override
     public String toString() {
         return "ProductPostData{" +
@@ -70,6 +79,8 @@ public class ProductPostData {
                 ", price=" + price +
                 ", attributes=" + attributes +
                 ", categoryId=" + categoryId +
+                ", activation=" + activation +
                 '}';
     }
+
 }
