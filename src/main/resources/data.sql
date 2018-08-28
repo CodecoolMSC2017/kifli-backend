@@ -53,75 +53,75 @@ INSERT INTO category_attributes (category_id, name, type) VALUES (6, 'Is it blue
 
 
 -- 1
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (3, 1, 'New tractor for sale', 'Front hydraulics, front PTO, susepension front axle, good tires.', 24691.00, 'BUYOUT', 'FOR SALE', to_date('20170725','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (3, 1, 'New tractor for sale', 'Front hydraulics, front PTO, susepension front axle, good tires.', 24691.00, 'BUYOUT', 'FOR SALE', to_date('20170725','YYYYMMDD'), 'true');
 -- 2
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (2, 3, '100 chicken for sale', 'Domestic farmed chickens for sale. The price per piece.', 12.00, 'BUYOUT', 'FOR SALE', to_date('20180618','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (2, 3, '100 chicken for sale', 'Domestic farmed chickens for sale. The price per piece.', 12.00, 'BUYOUT', 'FOR SALE', to_date('20180618','YYYYMMDD'), 'true');
 -- 3
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (5, 6, 'Beef for sale', 'Fresh beef for sale! For professional butcher. The price is per kg.', 10.00, 'BUYOUT', 'FOR SALE', to_date('20180619','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (5, 6, 'Beef for sale', 'Fresh beef for sale! For professional butcher. The price is per kg.', 10.00, 'BUYOUT', 'FOR SALE', to_date('20180619','YYYYMMDD'), 'true');
 -- 4
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (6, 2, 'Farm for sale', '3000m2, This farm also has the potential to be converted into an organic farm operation.  With deep fertile soils, local access to manure and compost, good irrigation and good rainfall this farm is highly suited for organics.', 300000.00, 'BUYOUT', 'FOR SALE', to_date('20180620','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (6, 2, 'Farm for sale', '3000m2, This farm also has the potential to be converted into an organic farm operation.  With deep fertile soils, local access to manure and compost, good irrigation and good rainfall this farm is highly suited for organics.', 300000.00, 'BUYOUT', 'FOR SALE', to_date('20180620','YYYYMMDD'), 'true');
 -- 5
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (1, 1, 'NX2000 Harvester', 'An awesome piece of machinery, this bad boy can handle any work you throw at it.', 26599.99, 'BUYOUT', 'FOR SALE', to_date('20180621','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (1, 1, 'NX2000 Harvester', 'An awesome piece of machinery, this bad boy can handle any work you throw at it.', 26599.99, 'BUYOUT', 'FOR SALE', to_date('20180621','YYYYMMDD'), 'true');
 -- 6
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (3, 4, 'Rake for sale, in perfect condition', 'The title says it all.', 8.00, 'BUYOUT', 'FOR SALE', to_date('20180622','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (3, 4, 'Rake for sale, in perfect condition', 'The title says it all.', 8.00, 'BUYOUT', 'FOR SALE', to_date('20180622','YYYYMMDD'), 'true');
 -- 7
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (6, 4, 'Red wheelbarrow', '8 years old wheelbarrow, with only a few scratches on the side.', 30.00, 'BUYOUT', 'FOR SALE', to_date('20180623','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (6, 4, 'Red wheelbarrow', '8 years old wheelbarrow, with only a few scratches on the side.', 30.00, 'BUYOUT', 'FOR SALE', to_date('20180623','YYYYMMDD'), 'true');
 -- 8
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (7, 4, '500L tank', '*slaps top of tank* This bad boy can fit so much water in it!', 200.00, 'BUYOUT', 'FOR SALE', to_date('20180623','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (7, 4, '500L tank', '*slaps top of tank* This bad boy can fit so much water in it!', 200.00, 'BUYOUT', 'FOR SALE', to_date('20180623','YYYYMMDD'), 'true');
 -- 9
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (1, 4, 'High pressure pump', '300W consumption, can SUCC water from 15 meter deep wells.', 170.00, 'BUYOUT', 'FOR SALE', to_date('20180623','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (1, 4, 'High pressure pump', '300W consumption, can SUCC water from 15 meter deep wells.', 170.00, 'BUYOUT', 'FOR SALE', to_date('20180623','YYYYMMDD'), 'true');
 -- 10
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (1, 3, 'German shephard puppies', '6 cute little puppies are waiting for their new owners!', 15.00, 'BUYOUT', 'FOR SALE', to_date('20180623','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (1, 3, 'German shephard puppies', '6 cute little puppies are waiting for their new owners!', 15.00, 'BUYOUT', 'FOR SALE', to_date('20180623','YYYYMMDD'), 'true');
 -- 11
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (2, 4, 'Garden toolset', 'Slightly rusty toolset with everything you need at home to keep your garden tidy.', 40.00, 'BUYOUT', 'FOR SALE', to_date('20180623','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (2, 4, 'Garden toolset', 'Slightly rusty toolset with everything you need at home to keep your garden tidy.', 40.00, 'BUYOUT', 'FOR SALE', to_date('20180623','YYYYMMDD'), 'false');
 -- 12
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (1, 5, 'Strawberry plants', 'They just grew onto me, gotta get rid of them.', 3.00, 'BUYOUT', 'FOR SALE', to_date('20180627','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (1, 5, 'Strawberry plants', 'They just grew onto me, gotta get rid of them.', 3.00, 'BUYOUT', 'FOR SALE', to_date('20180627','YYYYMMDD'), 'false');
 -- 13
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (4, 1, 'Trailer for harvesting', 'A regular trailer in great shape.', 380.00, 'BUYOUT', 'FOR SALE', to_date('20180627','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (4, 1, 'Trailer for harvesting', 'A regular trailer in great shape.', 380.00, 'BUYOUT', 'FOR SALE', to_date('20180627','YYYYMMDD'), 'true');
 -- 14
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (6, 4, 'Weed killer', 'Not safe to use near children.', 20.00, 'BUYOUT', 'FOR SALE', to_date('20180627','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (6, 4, 'Weed killer', 'Not safe to use near children.', 20.00, 'BUYOUT', 'FOR SALE', to_date('20180627','YYYYMMDD'), 'true');
 -- 15
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (5, 5, 'Hayseed', 'Genetically modified hayseed to grow the food your animals need.', 23.00, 'BUYOUT', 'FOR SALE', to_date('20180629','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (5, 5, 'Hayseed', 'Genetically modified hayseed to grow the food your animals need.', 23.00, 'BUYOUT', 'FOR SALE', to_date('20180629','YYYYMMDD'), 'false');
 -- 16
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (3, 4, 'Wrenches in multiple sizes', 'Nothing to see here, go buy them!', 6.00, 'BUYOUT', 'FOR SALE', to_date('20180701','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (3, 4, 'Wrenches in multiple sizes', 'Nothing to see here, go buy them!', 6.00, 'BUYOUT', 'FOR SALE', to_date('20180701','YYYYMMDD'), 'true');
 -- 17
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (2, 4, '30m long hose', 'Unused hose, 3 cm in diameter.', 10.00, 'BUYOUT', 'FOR SALE', to_date('20180701','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (2, 4, '30m long hose', 'Unused hose, 3 cm in diameter.', 10.00, 'BUYOUT', 'FOR SALE', to_date('20180701','YYYYMMDD'), 'true');
 -- 18
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (7, 5, 'Synthetic fertilizer', 'description', 32.50, 'BUYOUT', 'FOR SALE', to_date('20180702','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (7, 5, 'Synthetic fertilizer', 'description', 32.50, 'BUYOUT', 'FOR SALE', to_date('20180702','YYYYMMDD'), 'false');
 -- 19
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (5, 1, 'Sprayer for tractor', 'description', 460.00, 'BUYOUT', 'FOR SALE', to_date('20180703','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (5, 1, 'Sprayer for tractor', 'description', 460.00, 'BUYOUT', 'FOR SALE', to_date('20180703','YYYYMMDD'), 'true');
 -- 20
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (3, 1, 'Tractor for sale', 'description', 19999.99, 'BUYOUT', 'FOR SALE', to_date('20180703','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (3, 1, 'Tractor for sale', 'description', 19999.99, 'BUYOUT', 'FOR SALE', to_date('20180703','YYYYMMDD'), 'true');
 -- 21
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (1, 4, 'Solar panel', 'description', 230.00, 'BUYOUT', 'FOR SALE', to_date('20180703','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (1, 4, 'Solar panel', 'description', 230.00, 'BUYOUT', 'FOR SALE', to_date('20180703','YYYYMMDD'), 'true');
 -- 22
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (3, 1, 'Grain crusher', 'description', 90.00, 'BUYOUT', 'FOR SALE', to_date('20180703','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (3, 1, 'Grain crusher', 'description', 90.00, 'BUYOUT', 'FOR SALE', to_date('20180703','YYYYMMDD'), 'false');
 -- 23
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (4, 1, 'Tractor inner tires', 'description', 9.99, 'BUYOUT', 'FOR SALE', to_date('20180714','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (4, 1, 'Tractor inner tires', 'description', 9.99, 'BUYOUT', 'FOR SALE', to_date('20180714','YYYYMMDD'), 'true');
 -- 24
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (5, 4, 'Cow drinkers', 'description', 34.00, 'BUYOUT', 'FOR SALE', to_date('20180715','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (5, 4, 'Cow drinkers', 'description', 34.00, 'BUYOUT', 'FOR SALE', to_date('20180715','YYYYMMDD'), 'true');
 -- 25
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (7, 5, 'Sunflower seeds', 'description', 2.20, 'BUYOUT', 'FOR SALE', to_date('20180716','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (7, 5, 'Sunflower seeds', 'description', 2.20, 'BUYOUT', 'FOR SALE', to_date('20180716','YYYYMMDD'), 'true');
 -- 26
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (2, 5, 'Oak saplings', 'description', 64.50, 'BUYOUT', 'FOR SALE', to_date('20180719','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (2, 5, 'Oak saplings', 'description', 64.50, 'BUYOUT', 'FOR SALE', to_date('20180719','YYYYMMDD'), 'true');
 -- 27
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (4, 5, 'Hay bale', 'description', 98.50, 'BUYOUT', 'FOR SALE', to_date('20180719','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (4, 5, 'Hay bale', 'description', 98.50, 'BUYOUT', 'FOR SALE', to_date('20180719','YYYYMMDD'), 'true');
 -- 28
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (5, 1, 'BOJLER ELADÓ', 'NEM LOPOTT, alig használt, alkuképes', 150.00, 'BUYOUT', 'FOR SALE', to_date('20180720','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (5, 1, 'BOJLER ELADÓ', 'NEM LOPOTT, alig használt, alkuképes', 150.00, 'BUYOUT', 'FOR SALE', to_date('20180720','YYYYMMDD'), 'true');
 -- 29
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (4, 5, 'Organic fertilizer', 'description', 24.00, 'BUYOUT', 'FOR SALE', to_date('20180720','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (4, 5, 'Organic fertilizer', 'description', 24.00, 'BUYOUT', 'FOR SALE', to_date('20180720','YYYYMMDD'), 'true');
 -- 30
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (6, 5, 'Corn for sale', 'description', 13.00, 'BUYOUT', 'FOR SALE', to_date('20180720','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (6, 5, 'Corn for sale', 'description', 13.00, 'BUYOUT', 'FOR SALE', to_date('20180720','YYYYMMDD'), 'true');
 -- 31
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (5, 1, 'Water tower', 'description', 1973.70, 'BUYOUT', 'FOR SALE', to_date('20180723','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (5, 1, 'Water tower', 'description', 1973.70, 'BUYOUT', 'FOR SALE', to_date('20180723','YYYYMMDD'), 'true');
 -- 32
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (7, 2, 'Farming plot', 'description', 18000.00, 'BUYOUT', 'FOR SALE', to_date('20180724','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (7, 2, 'Farming plot', 'description', 18000.00, 'BUYOUT', 'FOR SALE', to_date('20180724','YYYYMMDD'), 'false');
 -- 33
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (5, 1, 'Yet another tractor for sale', 'description', 26450.00, 'BUYOUT', 'FOR SALE', to_date('20180724','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (5, 1, 'Yet another tractor for sale', 'description', 26450.00, 'BUYOUT', 'FOR SALE', to_date('20180724','YYYYMMDD'), 'true');
 -- 34
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (1, 3, 'Beehive', 'description', 386.00, 'BUYOUT', 'FOR SALE', to_date('20180724','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (1, 3, 'Beehive', 'description', 386.00, 'BUYOUT', 'FOR SALE', to_date('20180724','YYYYMMDD'), 'true');
 -- 35
-INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date) VALUES (3, 1, 'Horse-draw carrige', 'description', 132.90, 'BUYOUT', 'FOR SALE', to_date('20180725','YYYYMMDD'));
+INSERT INTO product_ads (user_id, category_id, title, description, price, type, state, upload_date, activation) VALUES (3, 1, 'Horse-draw carrige', 'description', 132.90, 'BUYOUT', 'FOR SALE', to_date('20180725','YYYYMMDD'), 'true');
 
 
 INSERT INTO product_attributes (product_id, attribute_id, value) VALUES (1, 1, 'green');

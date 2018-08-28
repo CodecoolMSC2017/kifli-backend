@@ -59,6 +59,7 @@ CREATE TABLE product_ads (
     state VARCHAR(10) NOT NULL,
     upload_date DATE NOT NULL,
     premium_expiration_date DATE,
+    activation BOOLEAN NOT NULL,
     FOREIGN KEY (category_id) REFERENCES categories(id),
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
