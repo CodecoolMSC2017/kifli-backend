@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.UncheckedIOException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
@@ -152,12 +153,7 @@ public class UserController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public UserListDto getAllUsers (HttpServletResponse response) {
-        try {
+            logger.trace("Listing users in UserController");
             return userService.getUserList();
-        } catch(NotFoundException e) {
-            logger.warn(e.getMessage());
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return null;
-        }
     }
 }
