@@ -318,4 +318,13 @@ public class ProductService {
         return dto;
     }
 
+    @Transactional
+    public void setActivation(ProductDetailsDto dto, int productId) throws NotFoundException {
+
+        Product product = get(productId);
+
+        product.setActivation(dto.getActivation());
+        productRepository.save(product);
+    }
+
 }

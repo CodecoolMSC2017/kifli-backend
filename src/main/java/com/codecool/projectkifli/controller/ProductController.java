@@ -4,6 +4,7 @@ import com.codecool.projectkifli.dto.ProductDetailsDto;
 import com.codecool.projectkifli.dto.ProductListDto;
 import com.codecool.projectkifli.exception.ForbiddenException;
 import com.codecool.projectkifli.exception.InvalidInputException;
+import com.codecool.projectkifli.model.Product;
 import com.codecool.projectkifli.model.ProductPostData;
 import com.codecool.projectkifli.service.ProductService;
 import javassist.NotFoundException;
@@ -160,4 +161,25 @@ public class ProductController {
         return productService.getInactiveProducts(page);
     }
 
+    @PutMapping(
+            value = "/{productId}",
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    public void setActivation(@RequestBody ProductDetailsDto product, @RequestHeader("productId") Integer productId, HttpServletResponse resp) {
+        logger.trace("Put for product {}", productId);
+        String errorMessage = null;
+        Integer errorStatus;
+        try {
+            productService.setActivation(product, productId);
+            return;
+        } catch (NotFoundException e) {
+            errorMessage = e.getMessage();
+            errorStatus = HttpServletResponse.SC_NOT_FOUND;
+        }
+        if (errorMessage != null) {
+            logger.warn("Error updating product: {}", errorMessage);
+            resp.setHeader("errorMessage", errorMessage);
+        }
+        resp.setStatus(errorStatus);
+    }
 }

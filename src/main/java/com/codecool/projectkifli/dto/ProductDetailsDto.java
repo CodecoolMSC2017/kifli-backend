@@ -25,6 +25,7 @@ public class ProductDetailsDto {
     private String ownerName;
     private String ownerEmail;
     private String ownerPhone;
+    private Boolean activation;
 
     public ProductDetailsDto() {
     }
@@ -50,6 +51,8 @@ public class ProductDetailsDto {
         this.ownerName = owner.getFirstName() + " " + owner.getLastName();
         this.ownerEmail = owner.getEmail();
         this.ownerPhone = owner.getCredentials().getPhone();
+
+        this.activation = product.getActivation();
     }
 
     private Map<String, String> setupAttributes(Product product) {
@@ -199,5 +202,13 @@ public class ProductDetailsDto {
 
     public void setOwnerPhone(String ownerPhone) {
         this.ownerPhone = ownerPhone;
+    }
+
+    public Boolean getActivation() {
+        return activation;
+    }
+
+    public void setActivation(Boolean activation) {
+        this.activation = activation;
     }
 }
