@@ -95,7 +95,7 @@ public class ProductService {
         if (searchString == null || searchString.equals("")) {
             if (categoryId == null || categoryId == 0) {
                 logger.trace("Finding all products");
-                products = productListItemRepository.findAll();
+                products = productListItemRepository.findAllProduct();
             } else {
                 logger.trace("Filtering by category {}", categoryId);
                 products = productListItemRepository.findByCategoryId(categoryId);
@@ -121,12 +121,12 @@ public class ProductService {
         }
         int amountOfProducts = (int) productRepository.count();
         Pageable pageable = PageRequest.of(page - 1, NUMBER_OF_ITEMS_ON_PAGE);
-        Page<ProductListItem> products = productListItemRepository.findAll(pageable);
+        Page<ProductListItem> products = productListItemRepository.findAllProduct(pageable);
         if (products.getContent().size() == 0) {
             logger.debug("No items found on page, returning last page");
             page = amountOfProducts / NUMBER_OF_ITEMS_ON_PAGE + 1;
             pageable = PageRequest.of(page - 1, NUMBER_OF_ITEMS_ON_PAGE);
-            products = productListItemRepository.findAll(pageable);
+            products = productListItemRepository.findAllProduct(pageable);
         }
         dto.setProducts(products.getContent());
         dto.setPage(page);
