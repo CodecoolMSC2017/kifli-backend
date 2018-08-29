@@ -46,8 +46,8 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 @Service
 public class UserService {
 
-    HttpTransport transport = new NetHttpTransport();
-    JsonFactory jsonFactory = new JacksonFactory();
+    private HttpTransport transport = new NetHttpTransport();
+    private JsonFactory jsonFactory = new JacksonFactory();
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     //Principal principal = SecurityContextHolder.getContext().getAuthentication();
@@ -290,9 +290,10 @@ public class UserService {
         return token;
     }
 
-    public UserListDto getUserList()throws NotFoundException {
+    public UserListDto getUserList() {
         UserListDto userListDto = new UserListDto();
         userListDto.setUsers(userListItemRepository.findAll());
+        logger.info("Users listing");
         return userListDto;
     }
 }
