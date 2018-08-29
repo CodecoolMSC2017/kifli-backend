@@ -103,7 +103,7 @@ public class ProductService {
         } else {
             if (categoryId == null || categoryId == 0) {
                 logger.trace("Filtering by searchString '{}'", searchString);
-                products = productListItemRepository.findBySearchTitleString(searchString);
+                products = productListItemRepository.findBySearchTitleString(searchString.toLowerCase());
             } else {
                 logger.trace("Filtering by searchString '{}' and category {}", searchString, categoryId);
                 products = productListItemRepository.findBySearchTitleStringAndCategoryId(searchString, categoryId);
